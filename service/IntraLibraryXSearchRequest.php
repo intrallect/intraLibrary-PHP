@@ -26,17 +26,18 @@ class IntraLibraryXSearchRequest extends IntraLibraryRequest
 	/**
 	 * Execute an XSearch query
 	 * 
-	 * @param string  $query the XSearch query
-	 * @param integer $limit the maximum number of records to return
+	 * @param string  $query    the XSearch query
+	 * @param integer $limit    (optional) the maximum number of records to return
+	 * @param string  $username (optional) the user to search for. if empty, the configred intralibrary user will be used
 	 * @return IntraLibrarySRWResponse
 	 */
-	public function query($query, $limit = FALSE)
+	public function query($query, $limit = FALSE, $username = NULL)
 	{
 		$queryParams = array(
 			'version' => '1.1',
 			'operation' => 'searchRetrieve',
 			'recordSchema' => $this->responseObject->getRecordSchema(),
-			'username' => $this->getUsername(),
+			'username' => $username !== NULL ? $username : $this->getUsername(),
 			'query' => $query
 		);
 		
