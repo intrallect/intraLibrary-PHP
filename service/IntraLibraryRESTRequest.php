@@ -112,10 +112,10 @@ class IntraLibraryRESTRequest extends IntraLibraryRequest
 			{
 				case 'text/html';
 					$responseData = strip_tags($responseData);
-					error_log("Response (HTML tags stripped, $contentTypeHeader): $responseData");
+					error_log("Response (HTML tags stripped, $contentType): $responseData");
 					break;
 				default:
-					error_log("Response (RAW, $contentTypeHeader): $responseData");
+					error_log("Response (RAW, $contentType): $responseData");
 					break;
 			}
 		}
