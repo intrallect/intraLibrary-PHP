@@ -119,9 +119,9 @@ class IntraLibraryRequest
 		
 		$this->curlHandler = curl_init();
 		
-		$datapath = elgg_get_data_path();
-		curl_setopt($this->curlHandler, CURLOPT_COOKIEFILE, $datapath . '/intralibrary-admin.cookie');
-		curl_setopt($this->curlHandler, CURLOPT_COOKIEJAR, $datapath . '/intralibrary-admin.cookie');
+		$cookiePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'intralibrary-admin.cookie';
+		curl_setopt($this->curlHandler, CURLOPT_COOKIEFILE, $cookiePath);
+		curl_setopt($this->curlHandler, CURLOPT_COOKIEJAR, $cookiePath);
 		
 		$response = $this->get($method, $params);
 		
