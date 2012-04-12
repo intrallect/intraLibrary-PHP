@@ -33,8 +33,9 @@ class IntraLibraryRequest
 		
 		if (!preg_match('/^http[s]?:\/\//', $config->hostname))
 			$config->hostname = 'http://' . $config->hostname;
-		
-		$this->apiUrl = $config->hostname . '/' . $apiEndpoint;
+	
+		// trim any trailing slashes and append the endpoint
+		$this->apiUrl = rtrim($config->hostname, '/') . '/' . $apiEndpoint;
 		
 		$this->setLogin($config->username, $config->password);
 	}
