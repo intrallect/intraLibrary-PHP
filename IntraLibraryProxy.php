@@ -6,7 +6,7 @@
  * Subclasses should define a public static function for each available action as follows:
  * 
  * public static function actionX($argA, $argB) {
- * 	parent::invoke(__FUNCTION__, $argA, $argB);
+ * 	return parent::invoke(__FUNCTION__, func_get_args());
  * }
  * 
  * @requires PHP 5.3
@@ -71,7 +71,9 @@ abstract class IntraLibraryProxy
 			throw new IntraLibraryException("No proxy action defined for '$name'");
 		}
 		
-		return call_user_func_array(self::$_callbacks[$name], array_slice($args, 1));
+		$params = isset($args[1]) ? $args[1] : array();
+		
+		return call_user_func_array(self::$_callbacks[$name], $params);
 	}
 	
 	
