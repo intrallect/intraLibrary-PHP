@@ -9,6 +9,7 @@
 class IntraLibraryRequest
 {
 	private $curlHandler;
+	private $apiEndpoint;
 	private $apiUrl;
 	private $username;
 	private $password;
@@ -24,20 +25,32 @@ class IntraLibraryRequest
 	 */
 	public function __construct($apiEndpoint)
 	{
-		$config = IntraLibraryConfiguration::get();
+		$this->apiEndpoint = $apiEndpoint;
 		
-		if (empty($config->hostname))
+		$this->setHostname(IntraLibraryConfiguration::get('hostname'));
+		$this->setLogin(
+			IntraLibraryConfiguration::get('username'),
+			IntraLibraryConfiguration::get('password')
+		);
+	}
+	
+	/**
+	 * Set the hostname for this request
+	 * 
+	 * @param string $hostname
+	 */
+	public function setHostname($hostname)
+	{
+		if (empty($hostname))
 		{
 			throw new IntraLibraryException('Configuration Exception: hostname not configured');
 		}
 		
-		if (!preg_match('/^http[s]?:\/\//', $config->hostname))
-			$config->hostname = 'http://' . $config->hostname;
-	
-		// trim any trailing slashes and append the endpoint
-		$this->apiUrl = rtrim($config->hostname, '/') . '/' . $apiEndpoint;
+		// ensure hostname has url scheme
+		if (!preg_match('/^http[s]?:\/\//', $hostname))
+			$hostname = 'http://' . $hostname;
 		
-		$this->setLogin($config->username, $config->password);
+		$this->apiUrl = rtrim($hostname, '/') . '/' . $this->apiEndpoint;
 	}
 	
 	/**
