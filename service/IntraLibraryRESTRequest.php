@@ -58,7 +58,7 @@ class IntraLibraryRESTRequest extends IntraLibraryRequest
 	 * @param array  $params the request params
 	 * @return IntraLibraryRESTResponse
 	 */
-	public function adminGet($method = '', array $params = array())
+	public function adminGet($method = '', $params = array())
 	{
 		// send a normal 'adminGet'
 		$originalResp = parent::adminGet($method, $params);
