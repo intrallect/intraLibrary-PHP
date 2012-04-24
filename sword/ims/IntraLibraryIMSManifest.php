@@ -36,7 +36,7 @@ class IntraLibraryIMSManifest
 		if (strpos($name, 'set') === 0 && count($arguments) > 0)
 		{
 			$variable = substr($name, 3);
-			$this->_set($variable, (string) $arguments[0]);
+			$this->_set($variable, $arguments[0]);
 		}
 	}
 	
@@ -61,6 +61,12 @@ class IntraLibraryIMSManifest
 	 */
 	public function save($filepath)
 	{
+		// set a random identifier if we haven't received one yet
+		if (empty($this->variables['MainIdentifier']))
+		{
+			$this->variables['MainIdentifier'] = md5(uniqid('', TRUE));
+		}
+		
 		// bring all variables into scope
 		extract($this->variables);
 		
