@@ -11,6 +11,12 @@
 			xmlns:ns1="http://www.intrallect.com/metadata_model/annotation"
 			xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lomLoose.xsd">
 			<lom:general>
+<?php if (isset($CatalogueName, $CatalogueId)) : ?>
+				<lom:identifier>
+					<lom:catalog><?php echo $CatalogueName; ?></lom:catalog>
+					<lom:entry><?php echo $CatalogueId; ?></lom:entry>
+				</lom:identifier>
+<?php endif; ?>
 				<lom:title>
 					<lom:string language="en"><?php echo $Title ?></lom:string>
 				</lom:title>
@@ -21,7 +27,7 @@
 <?php if (isset($Keywords)) : ?>
 <?php foreach ($Keywords as $keyword) : ?>
 				<lom:keyword>
-					<lom:string language="en"><?php echo $keyword; ?></lom:string>
+					<lom:string language="en"><?php echo trim($keyword); ?></lom:string>
 				</lom:keyword>
 <?php endforeach; ?>
 <?php endif; ?>
@@ -71,15 +77,17 @@
 				<lom:format><?php echo $FileMimeType; ?></lom:format>
 				<lom:size><?php echo $FileSize; ?></lom:size>
 			</lom:technical>
+<?php if (isset($Copyright)) : ?>
 			<lom:rights>
 				<lom:copyrightAndOtherRestrictions>
 					<lom:source>LOMv1.0</lom:source>
 					<lom:value>yes</lom:value>
 				</lom:copyrightAndOtherRestrictions>
 				<lom:description>
-			      <lom:string language="en">Uploaded from Moodle</lom:string>
+			      <lom:string language="en"><?php echo $Copyright; ?></lom:string>
 			    </lom:description>
 			</lom:rights>
+<?php endif; ?>
 			<lom:classification>
 				<lom:purpose>
 					<lom:source>LOMv1.0</lom:source>
