@@ -26,24 +26,33 @@ class IntraLibraryXSearchRequest extends IntraLibraryRequest
 	/**
 	 * Execute an XSearch query
 	 * 
-	 * @param string  $query    the XSearch query
-	 * @param integer $limit    (optional) the maximum number of records to return
-	 * @param string  $username (optional) the user to search for. if empty, the configred intralibrary user will be used
+	 * @param array $params An array of options. Required: 'query'. Optional: 'limit', 'username', 'showUnpublished'
 	 * @return IntraLibrarySRWResponse
 	 */
-	public function query($query, $limit = FALSE, $username = NULL)
+	public function query($params)
 	{
+		// query parameter is required
+		if (empty($params['query']))
+		{
+			throw new IntraLibraryException('Missing query parameter');
+		}
+		
 		$queryParams = array(
 			'version' => '1.1',
 			'operation' => 'searchRetrieve',
 			'recordSchema' => $this->responseObject->getRecordSchema(),
-			'username' => $username !== NULL ? $username : $this->getUsername(),
-			'query' => $query
+			'username' => isset($params['username']) ? $params['username'] : $this->getUsername(),
+			'query' => $params['query']
 		);
 		
-		if (((int) $limit) != 0)
+		if (!empty($params['limit']) && ((int) $params['limit']) != 0)
 		{
-			$queryParams['maximumRecords'] = (int) $limit;
+			$queryParams['maximumRecords'] = (int) $params['limit'];
+		}
+		
+		if (!empty($params['showUnpublished']))
+		{
+			$queryParams['showUnpublished'] = 'true';
 		}
 		
 		return $this->get('', $queryParams);

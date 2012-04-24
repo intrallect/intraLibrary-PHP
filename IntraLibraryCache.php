@@ -16,7 +16,7 @@ class IntraLibraryCache extends IntraLibraryProxy
 	 */
 	public static function load($key)
 	{
-		return parent::invoke(__FUNCTION__, $key);
+		return parent::invoke(__FUNCTION__, func_get_args());
 	}
 	
 	/**
@@ -29,6 +29,6 @@ class IntraLibraryCache extends IntraLibraryProxy
 	 */
 	public static function save($key, $data, $expires = NULL)
 	{
-		return parent::invoke(__FUNCTION__, $key, $data, $expires);
+		return parent::invoke(__FUNCTION__, func_get_args());
 	}
 }

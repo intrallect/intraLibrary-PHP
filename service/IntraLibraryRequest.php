@@ -9,6 +9,7 @@
 class IntraLibraryRequest
 {
 	private $curlHandler;
+	private $apiEndpoint;
 	private $apiUrl;
 	private $username;
 	private $password;
@@ -24,19 +25,32 @@ class IntraLibraryRequest
 	 */
 	public function __construct($apiEndpoint)
 	{
-		$config = IntraLibraryConfiguration::get();
+		$this->apiEndpoint = $apiEndpoint;
 		
-		if (empty($config->hostname))
+		$this->setHostname(IntraLibraryConfiguration::get('hostname'));
+		$this->setLogin(
+			IntraLibraryConfiguration::get('username'),
+			IntraLibraryConfiguration::get('password')
+		);
+	}
+	
+	/**
+	 * Set the hostname for this request
+	 * 
+	 * @param string $hostname
+	 */
+	public function setHostname($hostname)
+	{
+		if (empty($hostname))
 		{
 			throw new IntraLibraryException('Configuration Exception: hostname not configured');
 		}
 		
-		if (!preg_match('/^http[s]?:\/\//', $config->hostname))
-			$config->hostname = 'http://' . $config->hostname;
+		// ensure hostname has url scheme
+		if (!preg_match('/^http[s]?:\/\//', $hostname))
+			$hostname = 'http://' . $hostname;
 		
-		$this->apiUrl = $config->hostname . '/' . $apiEndpoint;
-		
-		$this->setLogin($config->username, $config->password);
+		$this->apiUrl = rtrim($hostname, '/') . '/' . $this->apiEndpoint;
 	}
 	
 	/**
@@ -119,9 +133,9 @@ class IntraLibraryRequest
 		
 		$this->curlHandler = curl_init();
 		
-		$datapath = elgg_get_data_path();
-		curl_setopt($this->curlHandler, CURLOPT_COOKIEFILE, $datapath . '/intralibrary-admin.cookie');
-		curl_setopt($this->curlHandler, CURLOPT_COOKIEJAR, $datapath . '/intralibrary-admin.cookie');
+		$cookiePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'intralibrary-admin.cookie';
+		curl_setopt($this->curlHandler, CURLOPT_COOKIEFILE, $cookiePath);
+		curl_setopt($this->curlHandler, CURLOPT_COOKIEJAR, $cookiePath);
 		
 		$response = $this->get($method, $params);
 		

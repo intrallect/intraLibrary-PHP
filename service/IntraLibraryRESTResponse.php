@@ -30,14 +30,14 @@ class IntraLibraryRESTResponse
 			
 			if (isset($this->data['exception']))
 			{
-				$this->error = $this->data['exception']['message'];
-			}
-			
-			// Hackish, but haven't figure out a way to do this properly yet..
-			// we shouldn't be checking on 'message' but on a status code
-			if ($this->error == 'Cannot access to this action because :You need to have admin access[false] => FAILED')
-			{
-				$this->unauthorised = TRUE;
+				$exception = $this->data['exception'];
+				$this->error = $exception['message'];
+				
+				if (isset($exception['_attributes']['class']) &&
+						$exception['_attributes']['class'] == 'AccessDeniedException')
+				{
+					$this->unauthorised = TRUE;
+				}
 			}
 		}
 		else

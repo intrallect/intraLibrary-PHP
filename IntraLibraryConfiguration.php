@@ -11,17 +11,24 @@ class IntraLibraryConfiguration
 	private static $CONFIG;
 	
 	/**
-	 * Set the value for a configuration setting
+	 * Set the value for a configuration setting or override all settings
 	 * 
 	 * @param string $name  The setting name
-	 * @param mixed  $value The setting value
+	 * @param mixed  $value (optional) The setting value
 	 * @return void
 	 */
-	public static function set($name, $value)
+	public static function set($name, $value = NULL)
 	{
 		self::_init();
 		
-		self::$CONFIG->{$name} = $value;
+		if ($value == NULL && (is_array($name) || is_object($name)))
+		{
+			self::$CONFIG = (object) $name;
+		}
+		else if (is_string($name))
+		{
+			self::$CONFIG->{$name} = $value;
+		}
 	}
 	
 	/**

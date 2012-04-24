@@ -16,7 +16,7 @@ class IntraLibraryDebug extends IntraLibraryProxy
 	 */
 	public static function screen($message)
 	{
-		return parent::invoke(__FUNCTION__, $message);
+		return parent::invoke(__FUNCTION__, func_get_args());
 	}
 	
 	/**
@@ -27,6 +27,6 @@ class IntraLibraryDebug extends IntraLibraryProxy
 	 */
 	public static function log($message)
 	{
-		return parent::invoke(__FUNCTION__, $message);
+		return parent::invoke(__FUNCTION__, func_get_args());
 	}
 }
