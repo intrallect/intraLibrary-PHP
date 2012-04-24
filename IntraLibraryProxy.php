@@ -19,6 +19,7 @@ abstract class IntraLibraryProxy
 {
 	private static $_actions = array();
 	private static $_callbacks = array();
+	private static $_missingCallbackException = TRUE;
 	
 	/**
 	* Register a proxy function
@@ -68,7 +69,12 @@ abstract class IntraLibraryProxy
 		
 		if (empty(self::$_callbacks[$name]))
 		{
-			throw new IntraLibraryException("No proxy action defined for '$name'");
+			if (self::$_missingCallbackException)
+			{
+				throw new IntraLibraryException("No proxy action defined for '$name'");
+			}
+			
+			return FALSE;
 		}
 		
 		$params = isset($args[1]) ? $args[1] : array();
@@ -109,5 +115,17 @@ abstract class IntraLibraryProxy
 		}
 		
 		return self::$_actions[$calledClass];
+	}
+	
+	/**
+	 * Configure all proxy clients to throw exceptions
+	 * when invoking undefined callbacks
+	 * 
+	 * @param boolean $doThrow
+	 * @return void
+	 */
+	public static function setThrowExceptionOnMissingCallback($doThrow)
+	{
+		self::$_missingCallbackException = $doThrow;
 	}
 }
