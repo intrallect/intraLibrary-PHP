@@ -26,7 +26,7 @@ class IntraLibraryIMSManifest
 	}
 	
 	/**
-	 * Magic function to intercept 'set*' function calls
+	 * Magic function to intercept 'set*' & 'get*' function calls
 	 * 
 	 * @param string $name
 	 * @param array  $arguments
@@ -36,7 +36,18 @@ class IntraLibraryIMSManifest
 		if (strpos($name, 'set') === 0 && count($arguments) > 0)
 		{
 			$variable = substr($name, 3);
-			$this->_set($variable, $arguments[0]);
+			if (strlen($variable) > 0)
+			{
+				$this->_set($variable, $arguments[0]);
+			}
+		}
+		else if (strpos($name, 'get') === 0)
+		{
+			$variable = substr($name, 3);
+			if (strlen($variable) > 0)
+			{
+				return isset($this->variables[$variable]) ? $this->variables[$variable] : NULL;
+			}
 		}
 	}
 	

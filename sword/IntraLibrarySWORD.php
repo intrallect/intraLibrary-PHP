@@ -72,9 +72,9 @@ class IntraLibrarySWORD
 	/**
 	 * 
 	 * @param IntraLibraryIMSManifest $manifest A configured manifest
-	 * @param array                   $fileData An entry from the $_FILES superglobal
+	 * @param string                  $filepath A path to the file that should be attached
 	 */
-	public function create_package(IntraLibraryIMSManifest $manifest, $fileData)
+	public function create_package(IntraLibraryIMSManifest $manifest, $filepath)
 	{
 		// setup paths
 		$uniqid 		= str_replace('.', '', uniqid('', TRUE));
@@ -99,11 +99,17 @@ class IntraLibrarySWORD
 			throw new Exception('Unable to create the upload package manifest.');
 		}
 		
+		$filename = $manifest->getFileName();
+		if (empty($filename))
+		{
+			throw new Exception('Unable to create the upload package: imsmanifest did not contain a file name');
+		}
+		
 		// create a zip archive with the manifest and the uploaded file
 		$zip = new ZipArchive();
 		$zip->open($packagePath, ZIPARCHIVE::CREATE);
 		$zip->addFile($manifestPath, 'imsmanifest.xml');
-		$zip->addFile($fileData['tmp_name'], $fileData['name']);
+		$zip->addFile($filepath, $filename);
 		$zip->close();
 		
 		// remove the manifest file..
