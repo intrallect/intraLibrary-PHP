@@ -27,7 +27,7 @@
 <?php if (isset($Keywords)) : ?>
 <?php foreach ($Keywords as $keyword) : ?>
 				<lom:keyword>
-					<lom:string language="en"><?php echo trim($keyword); ?></lom:string>
+					<lom:string language="en"><?php echo $keyword; ?></lom:string>
 				</lom:keyword>
 <?php endforeach; ?>
 <?php endif; ?>
