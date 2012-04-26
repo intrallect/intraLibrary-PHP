@@ -77,7 +77,7 @@ class IntraLibraryIMSManifest
 			
 			if ($hasData && $clean === '')
 			{
-				throw new Exception("Unable to sanitise data for the IMS Manifest. Are there illegal characters in your metadata:\n---------\n$data\n---------");
+				throw new Exception("Unable to sanitise data for the IMS Manifest. Are there illegal characters in your metadata?\n---------\n$data\n---------\n");
 			}
 		}
 		
