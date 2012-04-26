@@ -6,16 +6,37 @@
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  */
-interface IntraLibrarySRWParser
+abstract class IntraLibrarySRWParser
 {
-
+	private static $_PARSER_FIELDS = array(
+			'id',
+			'catalog',
+			'title',
+			'description',
+			'type',
+			'format'
+	);
+	
+	/**
+	 * Create a new IntraLibrarySRWParser and validate
+	 * its implementation.
+	 */
+	public final function __construct()
+	{
+		$xPathFields = array_keys($this->getXPathMapping());
+		if ($missingFields = array_diff(self::$_PARSER_FIELDS, $xPathFields))
+		{
+			throw new Exception(get_called_class() . ' does not support: ' . implode(',', $missingFields));
+		}
+	}
+	
 	/**
 	 * Initialise the XPath helper
 	 *
 	 * @param DOMXPath $xPath the xpath object that will be used to consume the dom
 	 * @return void
 	 */
-	public function initialise(DOMXPath $xPath);
+	abstract public function initialise(DOMXPath $xPath);
 
 	/**
 	 * Get a mapping of all relevant values [valueName => xPath]
@@ -23,7 +44,7 @@ interface IntraLibrarySRWParser
 	 *
 	 * @return void
 	 */
-	public function getXPathMapping();
+	abstract public function getXPathMapping();
 	
 	/**
 	 * Get all classifications under a dom element
@@ -32,5 +53,5 @@ interface IntraLibrarySRWParser
 	 * @param DOMElement              $domElement  the dom element
 	 * @return array
 	 */
-	public function getClassifications(IntraLibraryXMLResponse $xmlResponse, DOMElement $domElement);
+	abstract public function getClassifications(IntraLibraryXMLResponse $xmlResponse, DOMElement $domElement);
 }

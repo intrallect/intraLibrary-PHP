@@ -6,7 +6,7 @@
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  */
-class IntraLibrarySRWLOMParser implements IntraLibrarySRWParser
+class IntraLibrarySRWLOMParser extends IntraLibrarySRWParser
 {
 
 	/**
@@ -34,7 +34,8 @@ class IntraLibrarySRWLOMParser implements IntraLibrarySRWParser
 			'catalog'	  => './/lom:general/lom:identifier/lom:catalog',
 			'title'       => './/lom:general/lom:title/lom:string',
 			'description' => './/lom:general/lom:description/lom:string',
-			'type'        => './/lom:educational/lom:learningResourceType/lom:value'
+			'format'      => './/lom:technical/lom:format',
+			'type'        => './/lom:educational/lom:learningResourceType/lom:value',
 		);
 	}
 	

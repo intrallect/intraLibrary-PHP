@@ -8,8 +8,6 @@
  */
 class IntraLibrarySRWResponse extends IntraLibraryXMLResponse
 {
-	private static $swrParserFields = array('id', 'catalog', 'title', 'description', 'type');
-	
 	/**
 	 * The XPath Mapping helper
 	 * 
@@ -62,15 +60,13 @@ class IntraLibrarySRWResponse extends IntraLibraryXMLResponse
 			return;
 		}
 		
-		$xPathMapping = $this->srwParser->getXPathMapping();
-		
 		foreach ($recordList as $recordElement)
 		{
 			$record = array();
 			
-			foreach (self::$swrParserFields as $field)
+			foreach ($this->srwParser->getXPathMapping() as $field => $xPath)
 			{
-				$record[$field] = $this->getText($xPathMapping[$field], $recordElement);
+				$record[$field] = $this->getText($xPath, $recordElement);
 			}
 			
 			$record['classifications'] = $this->srwParser->getClassifications($this, $recordElement);
