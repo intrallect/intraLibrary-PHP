@@ -77,7 +77,7 @@ class IntraLibraryObjectStore
 			$conditions[] = (isset($paramMap[$key]) ? $paramMap[$key] : $key) . '=' . $value;
 		});
 		
-		$xsReq->query(implode(' AND ', $conditions), $limit);
+		$xsReq->query(array('query' => implode(' AND ', $conditions), 'limit' => $limit));
 		
 		$data   = $xsResp->getRecords();
 		
@@ -115,7 +115,7 @@ class IntraLibraryObjectStore
 		$xsResp = new IntraLibrarySRWResponse('lom');
 		$xsReq  = new IntraLibraryXSearchRequest($xsResp);
 		
-		$xsReq->query('lom.general_catalogentry_entry=' . $catalogEntry);
+		$xsReq->query(array('query' => 'lom.general_catalogentry_entry=' . $catalogEntry));
 		
 		$data  = $xsResp->getRecords();
 		$data  = isset($data[0]) ? $data[0] : NULL;
