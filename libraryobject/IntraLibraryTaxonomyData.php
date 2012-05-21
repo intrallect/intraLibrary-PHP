@@ -99,9 +99,10 @@ class IntraLibraryTaxonomyData
 		
 		if ($rebuild)
 		{
-			// Rebuild and check all caches again (without a rebuild)
-			$this->getAvailableTaxonomies();
+			// trigger a rebuild of the caches
+			$this->getAvailableTaxonomies(FALSE, FALSE);
 			
+			// and check the caches again
 			return $this->_retrieve(FALSE);
 		}
 		
@@ -114,15 +115,18 @@ class IntraLibraryTaxonomyData
 	 * @param boolean $usingAdmin if true, will use the admin account to retrive taxonomies
 	 * @return array
 	 */
-	public function getAvailableTaxonomies($usingAdmin = FALSE)
+	public function getAvailableTaxonomies($usingAdmin = FALSE, $useCache = TRUE)
 	{
-		// Check if it's cached..
 		$key = $usingAdmin ? 'taxonomies//admin' : 'taxonomies//user:' . IntraLibraryConfiguration::get('username');
 		
-		$taxonomyIds = IntraLibraryCache::load($key);
-		if ($taxonomyIds !== FALSE)
+		if ($useCache)
 		{
-			return $taxonomyIds;
+			// Check if it's cached..
+			$taxonomyIds = IntraLibraryCache::load($key);
+			if ($taxonomyIds !== FALSE)
+			{
+				return $taxonomyIds;
+			}
 		}
 		
 		// Query the Taxonomy REST service
@@ -267,29 +271,21 @@ class IntraLibraryTaxonomyData
 	{
 		$type 		= $object->getType();
 		
-		// Use IntraLibrary's Caching mechanism
-		// and fallback on the runtime cache if it fails
 		$key_id 	= $this->_getCacheKey($object->getId(), self::CACHE_PREFIX_ID, $type);
-		if (IntraLibraryCache::save($key_id, $object, 0) === FALSE)
-		{
-			self::$runtimeCache[$key_id] 	= $object;
-		}
+		IntraLibraryCache::save($key_id, $object, 0);
+		self::$runtimeCache[$key_id] = $object;
 		
 		if ($type == IntraLibraryTaxonomyObject::TAXON)
 		{
 			$key_refId	= $this->_getCacheKey($object->getRefId(), self::CACHE_PREFIX_REFID, $type, $source);
-			if (IntraLibraryCache::save($key_refId, $object, 0) === FALSE)
-			{
-				self::$runtimeCache[$key_refId] = $object;
-			}
+			IntraLibraryCache::save($key_refId, $object, 0);
+			self::$runtimeCache[$key_refId] = $object;
 		}
 		else if ($type == IntraLibraryTaxonomyObject::TAXONOMY)
 		{
 			$key_source	= $this->_getCacheKey($object->getSource(), self::CACHE_PREFIX_SOURCE, $type);
-			if (IntraLibraryCache::save($key_source, $object, 0) === FALSE)
-			{
-				self::$runtimeCache[$key_source] = $object;
-			}
+			IntraLibraryCache::save($key_source, $object, 0);
+			self::$runtimeCache[$key_source] = $object;
 		}
 	}
 	
