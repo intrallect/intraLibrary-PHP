@@ -72,6 +72,7 @@ class IntraLibrarySRWResponse extends IntraLibraryXMLResponse
 			$record['classifications'] = $this->srwParser->getClassifications($this, $recordElement);
 			
 			// recordSchema agnostic fields
+			$record['packageId'] = $this->getText('.//package:packageResourceId', $recordElement);
 			$record['preview'] = $this->getText('.//package:packagePreviewLocator', $recordElement);
 			$record['download'] = $this->getText('.//package:packageDownloadLocator', $recordElement);
 			
