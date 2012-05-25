@@ -14,7 +14,8 @@ abstract class IntraLibrarySRWParser
 			'title',
 			'description',
 			'type',
-			'format'
+			'format',
+			'technical_location'
 	);
 	
 	/**

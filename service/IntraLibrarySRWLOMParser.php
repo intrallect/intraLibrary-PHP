@@ -35,6 +35,7 @@ class IntraLibrarySRWLOMParser extends IntraLibrarySRWParser
 			'title'       => './/lom:general/lom:title/lom:string',
 			'description' => './/lom:general/lom:description/lom:string',
 			'format'      => './/lom:technical/lom:format',
+			'technical_location' => './/lom:technical/lom:location',
 			'type'        => './/lom:educational/lom:learningResourceType/lom:value',
 		);
 	}
