@@ -20,9 +20,11 @@
 				<lom:title>
 					<lom:string language="en"><?php echo $Title ?></lom:string>
 				</lom:title>
+<?php foreach ($Descriptions as $Description) : ?>
 				<lom:description>
 					<lom:string language="en"><?php echo $Description ?></lom:string>
 				</lom:description>
+<?php endforeach; ?>
 				<lom:language>en</lom:language>
 <?php if (isset($Keywords)) : ?>
 <?php foreach ($Keywords as $keyword) : ?>
@@ -31,11 +33,6 @@
 				</lom:keyword>
 <?php endforeach; ?>
 <?php endif; ?>
-<?php if (isset($ApprovalReason)) : ?>
-				<lom:description>
-					<lom:string language="en"><?php echo $ApprovalReason ?></lom:string>
-				</lom:description>
-<?php endif; ?>				
 			</lom:general>
 			<lom:lifeCycle>
 				<lom:contribute>
@@ -74,8 +71,13 @@
 				<lom:language>en</lom:language>
 			</lom:metaMetadata>
 			<lom:technical>
-				<lom:format><?php echo $FileMimeType; ?></lom:format>
-				<lom:size><?php echo $FileSize; ?></lom:size>
+				<lom:format><?php echo $TechnicalFormat; ?></lom:format>
+<?php if (isset($TechnicalSize)) : ?>
+				<lom:size><?php echo $TechnicalSize; ?></lom:size>
+<?php endif; ?>
+<?php if (isset($TechnicalLocation)) : ?>
+				<lom:location><?php echo $TechnicalLocation; ?></lom:location>
+<?php endif; ?>
 			</lom:technical>
 <?php if (isset($Copyright)) : ?>
 			<lom:rights>
@@ -120,8 +122,10 @@
 		</organization>
 	</organizations>
 	<resources>
+<?php if (isset($FileName)) : ?>
 		<resource href="<?php echo $FileName ?>" identifier="<?php echo $MainIdentifier ?>" type="webcontent">
 			<file href="<?php echo $FileName ?>" />
 		</resource>
+<?php endif; ?>
 	</resources>
 </manifest>

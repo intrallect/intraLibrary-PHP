@@ -10,7 +10,8 @@ class IntraLibraryIMSManifest
 	public function __construct()
 	{
 		$this->variables = array(
-				'TaxonPaths' => array()
+				'TaxonPaths' => array(),
+				'Descriptions' => array()
 		);
 	}
 	
@@ -89,6 +90,7 @@ class IntraLibraryIMSManifest
 	 * 
 	 * @param string $refId
 	 * @param string $name
+	 * @return void
 	 */
 	public function addClassification($source, $taxons)
 	{
@@ -96,6 +98,17 @@ class IntraLibraryIMSManifest
 				'source' => $this->_sanitiseForXML($source), 
 				'taxons' => $this->_sanitiseForXML($taxons)
 		);
+	}
+	
+	/**
+	 * Add a description
+	 *  
+	 * @param string $description
+	 * @return void
+	 */
+	public function addDescription($description)
+	{
+		$this->variables['Descriptions'][] = $description;
 	}
 	
 	/**
