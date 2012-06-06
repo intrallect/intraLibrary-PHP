@@ -8,6 +8,7 @@
  */
 class IntraLibraryRequest
 {
+	private $curlHandle;
 	private $curlHandler;
 	private $apiEndpoint;
 	private $apiUrl;
@@ -34,6 +35,16 @@ class IntraLibraryRequest
 		);
 	}
 	
+	/**
+	 * Set the curl handler for this request
+	 *
+	 * @param IntraLibraryCURLHandler $curlHandler
+	 */
+	public function setCurlHandler(IntraLibraryCURLHandler $curlHandler)
+	{
+		$this->curlHandler = $curlHandler;
+	}
+
 	/**
 	 * Set the hostname for this request
 	 * 
@@ -71,32 +82,43 @@ class IntraLibraryRequest
 			$this->requestURL .= '?' . $queryString;
 		}
 		
-		if ($this->curlHandler === NULL)
+		if ($this->curlHandle === NULL)
 		{
-			$this->curlHandler = curl_init();
+			$this->curlHandle = curl_init();
 		}
 		
-		curl_setopt($this->curlHandler, CURLOPT_URL, $this->requestURL);
-		curl_setopt($this->curlHandler, CURLOPT_RETURNTRANSFER, TRUE);
-		curl_setopt($this->curlHandler, CURLOPT_HEADER, FALSE);
-		curl_setopt($this->curlHandler, CURLINFO_HEADER_OUT, TRUE);
+		curl_setopt($this->curlHandle, CURLOPT_URL, $this->requestURL);
+		curl_setopt($this->curlHandle, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($this->curlHandle, CURLOPT_HEADER, FALSE);
+		curl_setopt($this->curlHandle, CURLINFO_HEADER_OUT, TRUE);
 		
 		if ($this->username && $this->password)
 		{
-			curl_setopt($this->curlHandler, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-			curl_setopt($this->curlHandler, CURLOPT_USERPWD, "$this->username:$this->password");
+			curl_setopt($this->curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			curl_setopt($this->curlHandle, CURLOPT_USERPWD, "$this->username:$this->password");
 		}
 		
-		$responseData 		= curl_exec($this->curlHandler);
-		$this->responseCode = curl_getinfo($this->curlHandler, CURLINFO_HTTP_CODE);
-		$this->responseType = curl_getinfo($this->curlHandler, CURLINFO_CONTENT_TYPE);
+		if ($this->curlHandler)
+		{
+			$this->curlHandler->preCurl($this->curlHandle);
+		}
 		
-		// log this request
-		IntraLibraryDebug::log(curl_getinfo($this->curlHandler, CURLINFO_HEADER_OUT));
+		// execute
+		$responseData = curl_exec($this->curlHandle);
+		// and log this request
+		IntraLibraryDebug::log(curl_getinfo($this->curlHandle, CURLINFO_HEADER_OUT));
+		
+		if ($this->curlHandler)
+		{
+			$this->curlHandler->postCurl($this->curlHandle, $responseData);
+		}
+		
+		$this->responseCode = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
+		$this->responseType = curl_getinfo($this->curlHandle, CURLINFO_CONTENT_TYPE);
 		
 		// reset the curl handler
-		curl_close($this->curlHandler);
-		$this->curlHandler 	= NULL;
+		curl_close($this->curlHandle);
+		$this->curlHandle 	= NULL;
 		
 		if ($this->responseCode < 200 || $this->responseCode > 399)
 		{
@@ -131,11 +153,11 @@ class IntraLibraryRequest
 		
 		$this->setLogin($ilConfig->admin_username, $ilConfig->admin_password);
 		
-		$this->curlHandler = curl_init();
+		$this->curlHandle = curl_init();
 		
 		$cookiePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'intralibrary-admin.cookie';
-		curl_setopt($this->curlHandler, CURLOPT_COOKIEFILE, $cookiePath);
-		curl_setopt($this->curlHandler, CURLOPT_COOKIEJAR, $cookiePath);
+		curl_setopt($this->curlHandle, CURLOPT_COOKIEFILE, $cookiePath);
+		curl_setopt($this->curlHandle, CURLOPT_COOKIEJAR, $cookiePath);
 		
 		$response = $this->get($method, $params);
 		
