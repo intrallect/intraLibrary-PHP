@@ -8,6 +8,13 @@
  */
 class IntraLibrarySRWResponse extends IntraLibraryXMLResponse
 {
+	private static $_namespaces = array(
+			'package' => 		'info:srw/extension/13/package-v1.0',
+			'intralibrary' => 	'info:srw/extension/13/intralibrary-v1.0',
+			'review' => 		'info:srw/extension/13/review-v1.0',
+			'record' => 		'http://srw.o-r-g.org/schemas/rec/1.0/'
+	);
+	
 	/**
 	 * The XPath Mapping helper
 	 * 
@@ -47,9 +54,12 @@ class IntraLibrarySRWResponse extends IntraLibraryXMLResponse
 	 */
 	protected function consumeDOM()
 	{
-		$this->srwParser->initialise($this->xPath);
+		foreach (self::$_namespaces as $prefix => $uri)
+		{
+			$this->xPath->registerNamespace($prefix, $uri);
+		}
 		
-		$this->xPath->registerNamespace('package', 'info:srw/extension/13/package-v1.0');
+		$this->srwParser->initialise($this->xPath);
 		
 		$this->records = array();
 		$this->totalRecords = (int) $this->getText('/SRW:searchRetrieveResponse/SRW:numberOfRecords');
@@ -75,6 +85,7 @@ class IntraLibrarySRWResponse extends IntraLibraryXMLResponse
 			$record['packageId'] = $this->getText('.//package:packageResourceId', $recordElement);
 			$record['preview'] = $this->getText('.//package:packagePreviewLocator', $recordElement);
 			$record['download'] = $this->getText('.//package:packageDownloadLocator', $recordElement);
+			$record['thumbnail'] = $this->getText('.//intralibrary:thumbnailLocation', $recordElement);
 			
 			$this->records[] = new IntraLibraryObject($record);
 		}
