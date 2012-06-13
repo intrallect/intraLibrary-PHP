@@ -52,7 +52,7 @@ class SWORDAPPClient {
 	// on-behlf-of the specified user, and with the given file and formatnamespace and noop setting
 	function deposit($sac_url, $sac_u, $sac_p, $sac_obo, $sac_fname, 
 	                 $sac_packaging= '', $sac_contenttype = '', 
-			 $sac_noop = false, $sac_verbose = false) {
+			 $sac_noop = false, $sac_verbose = false, $sac_md5 = true) {
 		// Perform the deposit
 		$sac_curl = curl_init();
 
@@ -69,8 +69,10 @@ class SWORDAPPClient {
 		global $sal_version;
 		array_push($headers, "User-Agent: SWORDAPP PHP library (version " . $sal_version . ") " .
 		                     "http://php.swordapp.org/");
-		$sac_md5 = md5_file($sac_fname);
-		array_push($headers, "Content-MD5: " . $sac_md5);
+		
+		if (!empty($sac_md5)) {
+			array_push($headers, "Content-MD5: " . md5_file($sac_fname));
+		}
 		if (!empty($sac_obo)) {
 			array_push($headers, "X-On-Behalf-Of: " . $sac_obo);
 	        }

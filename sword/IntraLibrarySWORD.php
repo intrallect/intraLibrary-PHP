@@ -63,10 +63,11 @@ class IntraLibrarySWORD
 				$this->password,
 				'',
 				$filename,
-				'http://www.imsglobal.org/xsd/imscp_v1p1',
+				'',
 				'application/zip',
 				FALSE,
-				TRUE);
+				TRUE,
+				FALSE);
 	}
 	
 }
