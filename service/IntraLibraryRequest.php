@@ -8,6 +8,27 @@
  */
 class IntraLibraryRequest
 {
+	/**
+	 * Determines if a string is a valid url
+	 * 
+	 * @param string $url the url to validate
+	 * @throws IntraLibraryException
+	 */
+	public static function validateUrl($url)
+	{
+		if (empty($url))
+		{
+			throw new IntraLibraryException('Configuration Exception: empty url');
+		}
+		
+		if (!filter_var($url, FILTER_VALIDATE_URL, FILTER_FLAG_SCHEME_REQUIRED))
+		{
+			throw new IntraLibraryException("Configuration Exception: url must include scheme (supplied: $url)");
+		}
+		
+		return $url;
+	}
+	
 	private $curlHandle;
 	private $curlHandler;
 	private $apiEndpoint;
@@ -52,15 +73,7 @@ class IntraLibraryRequest
 	 */
 	public function setHostname($hostname)
 	{
-		if (empty($hostname))
-		{
-			throw new IntraLibraryException('Configuration Exception: hostname not configured');
-		}
-		
-		// ensure hostname has url scheme
-		if (!preg_match('/^http[s]?:\/\//', $hostname))
-			$hostname = 'http://' . $hostname;
-		
+		self::validateUrl($hostname);
 		$this->apiUrl = rtrim($hostname, '/') . '/' . $this->apiEndpoint;
 	}
 	
