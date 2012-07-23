@@ -6,7 +6,7 @@
 class IntraLibraryIMSManifest
 {
 	private $variables;
-	
+
 	public function __construct()
 	{
 		$this->variables = array(
@@ -14,10 +14,10 @@ class IntraLibraryIMSManifest
 				'Descriptions' => array()
 		);
 	}
-	
+
 	/**
 	 * Set a template variable
-	 * 
+	 *
 	 * @param unknown_type $variable
 	 * @param unknown_type $value
 	 */
@@ -25,10 +25,10 @@ class IntraLibraryIMSManifest
 	{
 		$this->variables[$variable] = $value;
 	}
-	
+
 	/**
 	 * Magic function to intercept 'set*' & 'get*' function calls
-	 * 
+	 *
 	 * @param string $name
 	 * @param array  $arguments
 	 */
@@ -51,10 +51,10 @@ class IntraLibraryIMSManifest
 			}
 		}
 	}
-	
+
 	/**
 	 * Sanitise data for XML
-	 * 
+	 *
 	 * @param mixed $data
 	 * @throws Exception if sanitisation failed
 	 */
@@ -75,19 +75,19 @@ class IntraLibraryIMSManifest
 			$data 		= trim((string) $data);
 			$hasData 	= $data !== '';
 			$clean 		= htmlentities($data, ENT_QUOTES, 'UTF-8');
-			
+
 			if ($hasData && $clean === '')
 			{
 				throw new Exception("Unable to sanitise data for the IMS Manifest. Are there illegal characters in your metadata?\n---------\n$data\n---------\n");
 			}
 		}
-		
+
 		return $clean;
 	}
-	
+
 	/**
 	 * Add a taxonomy classification
-	 * 
+	 *
 	 * @param string $refId
 	 * @param string $name
 	 * @return void
@@ -95,14 +95,14 @@ class IntraLibraryIMSManifest
 	public function addClassification($source, $taxons)
 	{
 		$this->variables['TaxonPaths'][] = array(
-				'source' => $this->_sanitiseForXML($source), 
+				'source' => $this->_sanitiseForXML($source),
 				'taxons' => $this->_sanitiseForXML($taxons)
 		);
 	}
-	
+
 	/**
 	 * Add a description
-	 *  
+	 *
 	 * @param string $description
 	 * @return void
 	 */
@@ -110,30 +110,44 @@ class IntraLibraryIMSManifest
 	{
 		$this->variables['Descriptions'][] = $description;
 	}
-	
+
 	/**
 	 * Save the ims manifest
-	 * 
+	 *
 	 * @param string $filepath
 	 */
 	public function save($filepath)
 	{
-		// set a random identifier if we haven't received one yet
-		if (empty($this->variables['MainIdentifier']))
-		{
-			$this->variables['MainIdentifier'] = md5(uniqid('', TRUE));
-		}
-		
-		// bring all variables into scope
-		extract($this->variables);
-		
-		// process the template into a variable
-		ob_start();
-		include dirname(__FILE__) . '/imsmanifest.xml.php';
-		$manifestXML = ob_get_contents();
-		ob_end_clean();
-		
 		// and write out
-		return file_put_contents($filepath, $manifestXML);
+		return file_put_contents($filepath, $this->getXML());
+	}
+
+	/**
+	 * Get the ims manifest in xml
+	 *
+	 * @return string
+	 */
+	public function getXML() {
+		static $xml;
+
+		if (!isset($xml)) {
+
+			// set a random identifier if we haven't received one yet
+			if (empty($this->variables['MainIdentifier']))
+			{
+				$this->variables['MainIdentifier'] = md5(uniqid('', TRUE));
+			}
+
+			// bring all variables into scope
+			extract($this->variables);
+
+			// process the template into a variable
+			ob_start();
+			include dirname(__FILE__) . '/imsmanifest.xml.php';
+			$xml = ob_get_contents();
+			ob_end_clean();
+		}
+
+		return $xml;
 	}
 }
