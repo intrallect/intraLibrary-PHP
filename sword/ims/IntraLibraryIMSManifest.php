@@ -5,6 +5,7 @@
  */
 class IntraLibraryIMSManifest
 {
+	private $xml;
 	private $variables;
 
 	public function __construct()
@@ -128,9 +129,8 @@ class IntraLibraryIMSManifest
 	 * @return string
 	 */
 	public function getXML() {
-		static $xml;
 
-		if (!isset($xml)) {
+		if (!isset($this->xml)) {
 
 			// set a random identifier if we haven't received one yet
 			if (empty($this->variables['MainIdentifier']))
@@ -144,10 +144,10 @@ class IntraLibraryIMSManifest
 			// process the template into a variable
 			ob_start();
 			include dirname(__FILE__) . '/imsmanifest.xml.php';
-			$xml = ob_get_contents();
+			$this->xml = ob_get_contents();
 			ob_end_clean();
 		}
 
-		return $xml;
+		return $this->xml;
 	}
 }

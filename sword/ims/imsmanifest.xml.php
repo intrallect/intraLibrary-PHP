@@ -86,8 +86,8 @@
 					<lom:value>yes</lom:value>
 				</lom:copyrightAndOtherRestrictions>
 				<lom:description>
-			      <lom:string language="en"><?php echo $Copyright; ?></lom:string>
-			    </lom:description>
+					<lom:string language="en"><?php echo $Copyright; ?></lom:string>
+				</lom:description>
 			</lom:rights>
 <?php endif; ?>
 			<lom:classification>
