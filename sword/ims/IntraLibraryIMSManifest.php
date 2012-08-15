@@ -1,5 +1,7 @@
 <?php
 
+require_once dirname(__FILE__) . '/encoding_utils.php';
+
 /**
  * IMS Manifest builder
  */
@@ -7,9 +9,11 @@ class IntraLibraryIMSManifest
 {
 	private $xml;
 	private $variables;
+	private $charset;
 
-	public function __construct()
+	public function __construct($charset = 'UTF-8')
 	{
+		$this->charset = $charset;
 		$this->variables = array(
 				'TaxonPaths' => array(),
 				'Descriptions' => array()
@@ -75,12 +79,15 @@ class IntraLibraryIMSManifest
 		{
 			$data 		= trim((string) $data);
 			$hasData 	= $data !== '';
-			$clean 		= htmlentities($data, ENT_QUOTES, 'UTF-8');
+			$clean 		= @htmlentities($data, ENT_QUOTES, $this->charset);
 
 			if ($hasData && $clean === '')
 			{
 				throw new Exception("Unable to sanitise data for the IMS Manifest. Are there illegal characters in your metadata?\n---------\n$data\n---------\n");
 			}
+
+			// convert named to numeric, for XML support
+			$clean 		= html_convert_entities($clean);
 		}
 
 		return $clean;
