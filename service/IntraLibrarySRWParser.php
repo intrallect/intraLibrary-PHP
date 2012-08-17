@@ -15,9 +15,10 @@ abstract class IntraLibrarySRWParser
 			'description',
 			'type',
 			'format',
+			'size',
 			'technical_location'
 	);
-	
+
 	/**
 	 * Create a new IntraLibrarySRWParser and validate
 	 * its implementation.
@@ -30,7 +31,7 @@ abstract class IntraLibrarySRWParser
 			throw new Exception(get_called_class() . ' does not support: ' . implode(',', $missingFields));
 		}
 	}
-	
+
 	/**
 	 * Initialise the XPath helper
 	 *
@@ -46,7 +47,7 @@ abstract class IntraLibrarySRWParser
 	 * @return void
 	 */
 	abstract public function getXPathMapping();
-	
+
 	/**
 	 * Get all classifications under a dom element
 	 *
