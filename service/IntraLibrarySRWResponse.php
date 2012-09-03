@@ -86,6 +86,7 @@ class IntraLibrarySRWResponse extends IntraLibraryXMLResponse
 			$record['preview'] = $this->getText('.//package:packagePreviewLocator', $recordElement);
 			$record['download'] = $this->getText('.//package:packageDownloadLocator', $recordElement);
 			$record['thumbnail'] = $this->getText('.//intralibrary:thumbnailLocation', $recordElement);
+			$record['intralibraryType'] = $this->getText('.//intralibrary:type', $recordElement);
 			$record['lastModified'] = $this->getText('.//record:record/record:lastModified', $recordElement);
 			$record['created'] = $this->getText('.//record:record/record:created', $recordElement);
 
