@@ -1,12 +1,18 @@
 <?php
 
+namespace IntraLibrary\Service;
+
+use \IntraLibrary\IntraLibraryException;
+use \IntraLibrary\Configuration;
+use \IntraLibrary\Debug;
+
 /**
- * IntraLibraryRequest is a simple cURL wrapper
+ * IntraLibrary Request is a simple cURL wrapper
  *
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  */
-class IntraLibraryRequest
+class Request
 {
 	/**
 	 * Determines if a string is a valid url
@@ -49,19 +55,19 @@ class IntraLibraryRequest
 	{
 		$this->apiEndpoint = $apiEndpoint;
 
-		$this->setHostname(IntraLibraryConfiguration::get('hostname'));
+		$this->setHostname(Configuration::get('hostname'));
 		$this->setLogin(
-			IntraLibraryConfiguration::get('username'),
-			IntraLibraryConfiguration::get('password')
+			Configuration::get('username'),
+			Configuration::get('password')
 		);
 	}
 
 	/**
 	 * Set the curl handler for this request
 	 *
-	 * @param IntraLibraryCURLHandler $curlHandler
+	 * @param CURLHandler $curlHandler
 	 */
-	public function setCurlHandler(IntraLibraryCURLHandler $curlHandler)
+	public function setCurlHandler(CURLHandler $curlHandler)
 	{
 		$this->curlHandler = $curlHandler;
 	}
@@ -119,7 +125,7 @@ class IntraLibraryRequest
 		// execute
 		$responseData = curl_exec($this->curlHandle);
 		// and log this request
-		IntraLibraryDebug::log(curl_getinfo($this->curlHandle, CURLINFO_HEADER_OUT));
+		Debug::log(curl_getinfo($this->curlHandle, CURLINFO_HEADER_OUT));
 
 		if ($this->curlHandler)
 		{
@@ -137,7 +143,7 @@ class IntraLibraryRequest
 		{
 			$message  = "IntraLibrary request to <pre style='font-weight: normal;'>{$this->requestURL}</pre> by user {$this->username} received status code {$this->responseCode}";
 			$message .= "<pre style='font-weight:normal;'>" . htmlentities(substr($responseData, 0, 1000)) . "</pre>";
-			IntraLibraryDebug::screen($message);
+			Debug::screen($message);
 		}
 
 		return $this->prepareResponse($responseData);
@@ -157,7 +163,7 @@ class IntraLibraryRequest
 		$password = $this->password;
 
 		// authenticate as the admin
-		$ilConfig = IntraLibraryConfiguration::get();
+		$ilConfig = Configuration::get();
 
 		if (empty($ilConfig->admin_username) || empty($ilConfig->admin_password))
 		{

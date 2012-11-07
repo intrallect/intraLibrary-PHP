@@ -1,12 +1,16 @@
 <?php
 
+namespace IntraLibrary\Service;
+
+use \IntraLibrary\IntraLibraryException;
+
 /**
  * IntraLibraryCURLFileHandler saves curl requests to files
  *
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  */
-class IntraLibraryCURLFileSaveHandler implements IntraLibraryCURLHandler
+class CURLFileSaveHandler implements CURLHandler
 {
 	private $savepath;
 	private $file;
@@ -38,7 +42,7 @@ class IntraLibraryCURLFileSaveHandler implements IntraLibraryCURLHandler
 		$this->file = fopen($this->savepath, 'w');
 		if (!$this->file)
 		{
-			throw new Exception('Unable to create file for saving');
+			throw new IntraLibraryException('Unable to create file for saving');
 		}
 
 		curl_setopt($curlHandle, CURLOPT_FILE, $this->file);

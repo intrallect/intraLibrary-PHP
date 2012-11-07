@@ -1,5 +1,7 @@
 <?php
 
+namespace IntraLibrary;
+
 /**
  * Debugging proxy for IntraLibrary
  *
@@ -7,7 +9,7 @@
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  *
  */
-class IntraLibraryDebug extends IntraLibraryProxy
+class Debug extends Proxy
 {
 	/**
 	 * Send a message to the screen

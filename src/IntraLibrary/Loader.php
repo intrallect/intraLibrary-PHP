@@ -1,5 +1,7 @@
 <?php
 
+namespace IntraLibrary;
+
 /**
  * Class loader for IntraLibrary-PHP
  *
@@ -7,7 +9,7 @@
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  *
  */
-class IntraLibraryLoader
+class Loader
 {
 	private static $_instance;
 

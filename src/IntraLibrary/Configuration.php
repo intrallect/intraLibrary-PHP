@@ -1,5 +1,7 @@
 <?php
 
+namespace IntraLibrary;
+
 /**
  * Configuration store for IntraLibrary
  *
@@ -7,7 +9,7 @@
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  *
  */
-class IntraLibraryConfiguration
+class Configuration
 {
 	private static $CONFIG;
 
@@ -59,7 +61,7 @@ class IntraLibraryConfiguration
 	{
 		if (empty(self::$CONFIG))
 		{
-			self::$CONFIG = new stdClass();
+			self::$CONFIG = new \stdClass();
 		}
 	}
 }

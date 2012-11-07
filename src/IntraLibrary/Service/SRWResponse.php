@@ -1,12 +1,16 @@
 <?php
 
+namespace IntraLibrary\Service;
+
+use \IntraLibrary\IntraLibraryException;
+
 /**
  * IntraLibrary SRW response class
  *
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  */
-class IntraLibrarySRWResponse extends IntraLibraryXMLResponse
+class SRWResponse extends XMLResponse
 {
 	private static $_namespaces = array(
 			'SRW' =>            'http://www.loc.gov/zing/srw/',
@@ -20,7 +24,7 @@ class IntraLibrarySRWResponse extends IntraLibraryXMLResponse
 	/**
 	 * The XPath Mapping helper
 	 *
-	 * @var IntraLibrarySRWParser
+	 * @var SRWParser
 	 */
 	private $srwParser;
 	private $recordSchema;
@@ -38,7 +42,7 @@ class IntraLibrarySRWResponse extends IntraLibraryXMLResponse
 		switch ($recordSchema)
 		{
 			case 'lom':
-				$this->srwParser = new IntraLibrarySRWLOMParser();
+				$this->srwParser = new SRWLOMParser();
 				break;
 			default:
 				throw new Exception("No support for $recordSchema recordSchema");
@@ -50,7 +54,7 @@ class IntraLibrarySRWResponse extends IntraLibraryXMLResponse
 	/**
 	 * (non-PHPdoc)
 	 *
-	 * @see IntraLibraryXMLResponse::consumeDOM()
+	 * @see XMLResponse::consumeDOM()
 	 *
 	 * @return void
 	 */
@@ -92,14 +96,14 @@ class IntraLibrarySRWResponse extends IntraLibraryXMLResponse
 			$record['lastModified'] = $this->getText('.//record:record/record:lastModified', $recordElement);
 			$record['created'] = $this->getText('.//record:record/record:created', $recordElement);
 
-			$this->records[] = new IntraLibraryObject($record);
+			$this->records[] = new \IntraLibrary\LibraryObject\Object($record);
 		}
 	}
 
 	/**
 	 * Get the records contained in the response
 	 *
-	 * @return array an array of records from the response
+	 * @return \IntraLibrary\LibraryObject\Object[]
 	 */
 	public function getRecords()
 	{

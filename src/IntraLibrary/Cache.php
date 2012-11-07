@@ -1,5 +1,7 @@
 <?php
 
+namespace IntraLibrary;
+
 /**
  * Configurable Caching tool for IntraLibrary
  *
@@ -7,7 +9,7 @@
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  *
  */
-class IntraLibraryCache extends IntraLibraryProxy
+class Cache extends Proxy
 {
 	/**
 	 * Load from the cache

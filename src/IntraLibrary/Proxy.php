@@ -1,5 +1,7 @@
 <?php
 
+namespace IntraLibrary;
+
 /**
  * IntraLibraryProxy is used to register client implementations of functions
  * to be used with IntraLibrary.
@@ -16,7 +18,7 @@
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  *
  */
-abstract class IntraLibraryProxy
+abstract class Proxy
 {
 	private static $_actions = array();
 	private static $_callbacks = array();
@@ -106,7 +108,7 @@ abstract class IntraLibraryProxy
 		self::$_actions[$calledClass] = array();
 
 		// reflect in and find all public static functions defined by that class
-		$reflectionClass 	= new ReflectionClass($calledClass);
+		$reflectionClass 	= new \ReflectionClass($calledClass);
 		foreach ($reflectionClass->getMethods() as $method)
 		{
 			if ($method->isStatic() && $method->isPublic() && $method->class == $calledClass)

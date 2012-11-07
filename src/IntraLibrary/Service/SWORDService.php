@@ -1,13 +1,20 @@
 <?php
 
-call_user_func(function() {
-	$swordapppath = dirname(__FILE__) . '/swordapp-php-library/';
-	require_once $swordapppath . 'swordappclient.php';
-	require_once $swordapppath . 'swordappentry.php';
-});
+namespace IntraLibrary\Service;
 
-class IntraLibrarySWORD
+use \SWORDAPPClient;
+use \IntraLibrary\Configuration;
+
+/**
+ * A simple wrapper for swordapp-php-library
+ *
+ * @author janek
+ */
+class SWORDService
 {
+	/**
+	 * @var SWORDAPPClient
+	 */
 	private $client;
 
 	public function __construct($username, $password)
@@ -24,13 +31,10 @@ class IntraLibrarySWORD
 	 */
 	public function get_deposit_details()
 	{
-		$service = $this->client->servicedocument(
-				IntraLibraryConfiguration::get('hostname') . '/IntraLibrary-Deposit/service',
-				$this->username,
-				$this->password,
-				'');
+		$url 		= Configuration::get('hostname') . '/IntraLibrary-Deposit/service';
+		$service 	= $this->client->servicedocument($url, $this->username, $this->password, '');
 
-		$deposits = array();
+		$deposits 	= array();
 
 		foreach ($service->sac_workspaces as $workspace)
 		{

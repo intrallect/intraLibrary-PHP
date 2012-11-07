@@ -1,12 +1,19 @@
 <?php
 
+namespace IntraLibrary\Service;
+
+use \IntraLibrary\IntraLibraryException;
+use \DOMDocument;
+use \DOMXPath;
+use \DOMNode;
+
 /**
  * IntraLibrary XML Response base class
  *
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  */
-abstract class IntraLibraryXMLResponse
+abstract class XMLResponse
 {
 
 	protected $xPath;

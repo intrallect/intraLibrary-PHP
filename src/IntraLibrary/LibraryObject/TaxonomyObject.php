@@ -1,5 +1,9 @@
 <?php
 
+namespace IntraLibrary\LibraryObject;
+
+use \IntraLibrary\IntraLibraryException;
+
 /**
  * A lightweight object representing taxonomy data from the REST Taxonomy service
  *
@@ -7,7 +11,7 @@
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  *
  */
-class IntraLibraryTaxonomyObject
+class TaxonomyObject
 {
 	const TAXONOMY 	= 'taxonomy';
 	const TAXON 	= 'taxon';
@@ -54,7 +58,7 @@ class IntraLibraryTaxonomyObject
 	/**
 	 * Set this object's parent data
 	 *
-	 * @param IntraLibraryTaxonomyObject $parent the parent object
+	 * @param TaxonomyObject $parent the parent object
 	 * @return void
 	 */
 	public function setParent($parent)

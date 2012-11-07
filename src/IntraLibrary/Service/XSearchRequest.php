@@ -1,22 +1,26 @@
 <?php
 
+namespace IntraLibrary\Service;
+
+use \IntraLibrary\IntraLibraryException;
+
 /**
  * An XSearch request, pointed at the /IntraLibrary-XSearch endpoint.
  *
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  */
-class IntraLibraryXSearchRequest extends IntraLibraryRequest
+class XSearchRequest extends Request
 {
 
 	private $responseObject;
 
 	/**
-	 * Create an IntraLibraryXSearchRequest object
+	 * Create an XSearchRequest object
 	 *
-	 * @param IntraLibrarySRWResponse $responseObject the object used to handle the response
+	 * @param SRWResponse $responseObject the object used to handle the response
 	 */
-	public function __construct(IntraLibrarySRWResponse $responseObject)
+	public function __construct(SRWResponse $responseObject)
 	{
 		parent::__construct('IntraLibrary-XSearch');
 
@@ -27,7 +31,7 @@ class IntraLibraryXSearchRequest extends IntraLibraryRequest
 	 * Execute an XSearch query
 	 *
 	 * @param array $params An array of options. Required: 'query'. Optional: 'limit', 'username', 'showUnpublished'
-	 * @return IntraLibrarySRWResponse
+	 * @return SRWResponse
 	 */
 	public function query($params)
 	{
@@ -61,10 +65,10 @@ class IntraLibraryXSearchRequest extends IntraLibraryRequest
 	/**
 	 * Prepare the response
 	 *
-	 * @see IntraLibraryRequest::prepareResponse()
+	 * @see Request::prepareResponse()
 	 *
 	 * @param string $responseData the response data
-	 * @return IntraLibrarySRWResponse
+	 * @return SRWResponse
 	 */
 	protected function prepareResponse($responseData)
 	{

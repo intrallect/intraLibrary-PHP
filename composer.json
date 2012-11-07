@@ -1,0 +1,10 @@
+{
+	"name": "IntraLibrary-PHP",
+	"require": {
+	    "php": ">=5.3"
+	},
+	"autoload": {
+		"psr-0": {"IntraLibrary": "src/"},
+		"classmap": ["src/swordapp-php-library/swordappclient.php"]
+	}
+}

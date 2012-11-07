@@ -1,12 +1,19 @@
 <?php
 
+namespace IntraLibrary\Service;
+
+use \DOMXPath;
+use \DOMElement;
+use \IntraLibrary\IntraLibraryException;
+use \IntraLibrary\Service\XMLResponse;
+
 /**
  * An interface for SRW Response DOM consumers
  *
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  */
-abstract class IntraLibrarySRWParser
+abstract class SRWParser
 {
 	private static $_PARSER_FIELDS = array(
 			'id',
@@ -20,7 +27,7 @@ abstract class IntraLibrarySRWParser
 	);
 
 	/**
-	 * Create a new IntraLibrarySRWParser and validate
+	 * Create a new SRWParser and validate
 	 * its implementation.
 	 */
 	public final function __construct()
@@ -28,7 +35,7 @@ abstract class IntraLibrarySRWParser
 		$xPathFields = array_keys($this->getXPathMapping());
 		if ($missingFields = array_diff(self::$_PARSER_FIELDS, $xPathFields))
 		{
-			throw new Exception(get_called_class() . ' does not support: ' . implode(',', $missingFields));
+			throw new IntraLibraryException(get_called_class() . ' does not support: ' . implode(',', $missingFields));
 		}
 	}
 
@@ -51,9 +58,9 @@ abstract class IntraLibrarySRWParser
 	/**
 	 * Get all classifications under a dom element
 	 *
-	 * @param IntraLibraryXMLResponse $xmlResponse the xml response
-	 * @param DOMElement              $domElement  the dom element
+	 * @param XMLResponse $xmlResponse the xml response
+	 * @param DOMElement  $domElement  the dom element
 	 * @return array
 	 */
-	abstract public function getClassifications(IntraLibraryXMLResponse $xmlResponse, DOMElement $domElement);
+	abstract public function getClassifications(XMLResponse $xmlResponse, DOMElement $domElement);
 }

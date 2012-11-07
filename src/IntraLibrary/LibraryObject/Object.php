@@ -1,19 +1,23 @@
 <?php
 
+namespace IntraLibrary\LibraryObject;
+
+use \IntraLibrary\IntraLibraryException;
+
 /**
  * An IntraLibrary Object created by an XSearch request
  *
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  */
-class IntraLibraryObject
+class Object
 {
 	private $identifier;
 	private $catalog;
 	private $data;
 
 	/**
-	 * Create an IntraLibraryObject object
+	 * Create an Object object
 	 *
 	 * @param array $data the object data
 	 */

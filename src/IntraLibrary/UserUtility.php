@@ -1,12 +1,14 @@
 <?php
 
+namespace IntraLibrary;
+
 /**
  * A helper class to manage intralibrary users
  *
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  */
-class IntraLibraryUserUtility
+class UserUtility
 {
 	/**
 	 * Create an IntraLibrary student user

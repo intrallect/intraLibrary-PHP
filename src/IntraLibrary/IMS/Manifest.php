@@ -1,11 +1,11 @@
 <?php
 
-require_once dirname(__FILE__) . '/encoding_utils.php';
+namespace \IntraLibrary\IMS;
 
 /**
  * IMS Manifest builder
  */
-class IntraLibraryIMSManifest
+class Manifest
 {
 	private $xml;
 	private $variables;
@@ -87,7 +87,7 @@ class IntraLibraryIMSManifest
 			}
 
 			// convert named to numeric, for XML support
-			$clean 		= html_convert_entities($clean);
+			$clean 		= EncodingUtils::html_convert_entities($clean);
 		}
 
 		return $clean;

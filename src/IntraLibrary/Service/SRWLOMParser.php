@@ -1,12 +1,19 @@
 <?php
 
+namespace IntraLibrary\Service;
+
+use \DOMXPath;
+use \DOMElement;
+use \IntraLibrary\IntraLibraryException;
+use \IntraLibrary\Service\XMLResponse;
+
 /**
  * XPath helper used to parse SRW Requests with a LOM record schema
  *
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  */
-class IntraLibrarySRWLOMParser extends IntraLibrarySRWParser
+class SRWLOMParser extends SRWParser
 {
 
 	/**
@@ -23,7 +30,7 @@ class IntraLibrarySRWLOMParser extends IntraLibrarySRWParser
 	/**
 	 * (non-PHPdoc)
 	 *
-	 * @see IntraLibrarySWRLOMXPathHelper::getXPathMapping()
+	 * @see SWRLOMXPathHelper::getXPathMapping()
 	 *
 	 * @return array the XPath mapping
 	 */
@@ -44,13 +51,13 @@ class IntraLibrarySRWLOMParser extends IntraLibrarySRWParser
 	/**
 	 * (non-PHPdoc)
 	 *
-	 * @see IntraLibrarySRWXParser::getClassifications()
+	 * @see SRWXParser::getClassifications()
 	 *
-	 * @param IntraLibraryXMLResponse $xmlResponse the xml response
-	 * @param DOMElement              $domElement  the dom element
+	 * @param XMLResponse $xmlResponse the xml response
+	 * @param DOMElement  $domElement  the dom element
 	 * @return array
 	 */
-	public function getClassifications(IntraLibraryXMLResponse $xmlResponse, DOMElement $domElement)
+	public function getClassifications(XMLResponse $xmlResponse, DOMElement $domElement)
 	{
 		$classifications = array();
 		if (!($taxonPaths = $xmlResponse->xQuery('.//lom:classification/lom:taxonPath', $domElement)))

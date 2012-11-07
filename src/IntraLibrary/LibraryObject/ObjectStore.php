@@ -1,15 +1,22 @@
 <?php
 
+namespace IntraLibrary\LibraryObject;
+
+use \IntraLibrary\Configuration;
+use \IntraLibrary\Cache;
+use \IntraLibrary\Service\XSearchRequest;
+use \IntraLibrary\Service\RESTRequest;
+use \IntraLibrary\Service\SRWResponse;
+
 /**
- * IntraLibraryObjectStore is a cache for IntraLibrary objects, both global
+ * ObjectStore is a cache for IntraLibrary objects, both global
  * and user-specific
  *
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  */
-class IntraLibraryObjectStore
+class ObjectStore
 {
-
 	private $username;
 
 	/**
@@ -17,7 +24,7 @@ class IntraLibraryObjectStore
 	 */
 	public function __construct()
 	{
-		$this->username = IntraLibraryConfiguration::get('username');
+		$this->username = Configuration::get('username');
 	}
 
 	/**
@@ -26,7 +33,7 @@ class IntraLibraryObjectStore
 	 * @param string  $resourceType "Type of Resource" to filter by
 	 * @param string  $taxonSource  The taxon source
 	 * @param integer $limit        the maximum number of items to get
-	 * @return array<IntraLibraryObject> an array of items/records
+	 * @return array<Object> an array of items/records
 	 */
 	public function getObjectsByType($resourceType, $taxonSource = NULL, $limit = FALSE)
 	{
@@ -38,7 +45,7 @@ class IntraLibraryObjectStore
 	 *
 	 * @param array   $params an associative array of metadata query parameters
 	 * @param integer $limit  the maximum number of items to get
-	 * @return array<IntraLibraryObject>
+	 * @return array<Object>
 	 */
 	public function getObjects(array $params, $limit = FALSE)
 	{
@@ -56,7 +63,7 @@ class IntraLibraryObjectStore
 		}
 
 		// Try the cache
-		if (($cached = IntraLibraryCache::load($key)) !== FALSE)
+		if (($cached = Cache::load($key)) !== FALSE)
 		{
 			return $cached;
 		}
@@ -69,8 +76,8 @@ class IntraLibraryObjectStore
 			'catalog' => 'lom.general_catalogentry_entry'
 		);
 
-		$xsResp = new IntraLibrarySRWResponse('lom');
-		$xsReq 	= new IntraLibraryXSearchRequest($xsResp);
+		$xsResp = new SRWResponse('lom');
+		$xsReq 	= new XSearchRequest($xsResp);
 
 		// generate query conditions
 		$conditions	= array();
@@ -87,7 +94,7 @@ class IntraLibraryObjectStore
 			return strnatcmp($objectA->get('title'), $objectB->get('title'));
 		});
 
-		IntraLibraryCache::save($key, $data);
+		Cache::save($key, $data);
 
 		return $data;
 	}
@@ -96,7 +103,7 @@ class IntraLibraryObjectStore
 	 * Get an IntraLibrary object by it's catalog entry
 	 *
 	 * @param string $catalogEntry the catalog entry
-	 * @return array<IntraLibraryObject>
+	 * @return \IntraLibrary\LibraryObject\Object[]
 	 */
 	public function getObjectByCatalogEntry($catalogEntry)
 	{
@@ -107,21 +114,21 @@ class IntraLibraryObjectStore
 
 		$key = 'object//catalogEntry:' . $catalogEntry;
 
-		$object = IntraLibraryCache::load($key);
+		$object = Cache::load($key);
 		if ($object !== FALSE)
 		{
 			return $object;
 		}
 
-		$xsResp = new IntraLibrarySRWResponse('lom');
-		$xsReq  = new IntraLibraryXSearchRequest($xsResp);
+		$xsResp = new SRWResponse('lom');
+		$xsReq  = new XSearchRequest($xsResp);
 
 		$xsReq->query(array('query' => 'lom.general_catalogentry_entry=' . $catalogEntry));
 
 		$data  = $xsResp->getRecords();
 		$data  = isset($data[0]) ? $data[0] : NULL;
 
-		IntraLibraryCache::save($key, $data);
+		Cache::save($key, $data);
 
 		return $data;
 	}
@@ -135,13 +142,13 @@ class IntraLibraryObjectStore
 	{
 		$key = 'groups';
 
-		$cached = IntraLibraryCache::load($key);
+		$cached = Cache::load($key);
 		if ($cached !== FALSE)
 		{
 			return $cached;
 		}
 
-		$req  = new IntraLibraryRESTRequest();
+		$req  = new RESTRequest();
 		$data = $req->adminGet('Group')->getData();
 		$groups = array();
 
@@ -149,7 +156,7 @@ class IntraLibraryObjectStore
 		{
 			$groups[$group['id']] = $group;
 		}
-		IntraLibraryCache::save($key, $groups);
+		Cache::save($key, $groups);
 
 		return $groups;
 	}

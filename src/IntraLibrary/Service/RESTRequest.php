@@ -1,31 +1,35 @@
 <?php
 
+namespace IntraLibrary\Service;
+
+use \IntraLibrary\IntraLibraryException;
+
 /**
  * A REST request, pointed at the /IntraLibrary-REST/ endpoint.
  *
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko <j.lasocki-biczysko@intrallect.com>
  */
-class IntraLibraryRESTRequest extends IntraLibraryRequest
+class RESTRequest extends Request
 {
 
 	/**
-	 * @var IntraLibraryRESTResponse
+	 * @var RESTResponse
 	 */
 	private $responseObject;
 
 	/**
-	 * Create an IntraLibraryRESTRequest object
+	 * Create an RESTRequest object
 	 *
-	 * @param IntraLibraryRESTResponse $responseObject the object to handle the response data
+	 * @param RESTResponse $responseObject the object to handle the response data
 	 */
-	public function __construct(IntraLibraryRESTResponse $responseObject = null)
+	public function __construct(RESTResponse $responseObject = null)
 	{
 		parent::__construct('IntraLibrary-REST/');
 
 		if ($responseObject == null)
 		{
-			$responseObject = new IntraLibraryRESTResponse();
+			$responseObject = new RESTResponse();
 		}
 
 		$this->responseObject = $responseObject;
@@ -35,11 +39,11 @@ class IntraLibraryRESTRequest extends IntraLibraryRequest
 	 * Requests a response from the REST service, attempts to default the output
 	 * content type as JSON
 	 *
-	 * @see IntraLibraryRequest::get()
+	 * @see Request::get()
 	 *
 	 * @param string $method the method to call
 	 * @param array  $params the parameters that will be psased to this method (as HTTP GET parameters)
-	 * @return IntraLibraryRESTResponse
+	 * @return RESTResponse
 	 */
 	public function get($method = '', array $params = array())
 	{
@@ -52,11 +56,11 @@ class IntraLibraryRESTRequest extends IntraLibraryRequest
 	 * If the response comes back unauthorised, this will automatically attempt to set an admin
 	 * authorisation level and try again.
 	 *
-	 * @see IntraLibraryRequest::adminGet()
+	 * @see Request::adminGet()
 	 *
 	 * @param string $method The request method
 	 * @param array  $params the request params
-	 * @return IntraLibraryRESTResponse
+	 * @return RESTResponse
 	 */
 	public function adminGet($method = '', $params = array())
 	{
@@ -67,7 +71,7 @@ class IntraLibraryRESTRequest extends IntraLibraryRequest
 		if ($originalResp->isUnauthorised())
 		{
 			// create a new response object for the authorisation call
-			$this->responseObject = new IntraLibraryRESTResponse();
+			$this->responseObject = new RESTResponse();
 
 			// authorise the "adminGet" session (ie. set cURL's cookie)
 			$authResponse = parent::adminGet('Test/authentication');
@@ -89,10 +93,10 @@ class IntraLibraryRESTRequest extends IntraLibraryRequest
 	/**
 	 * Decode the JSON response
 	 *
-	 * @see IntraLibraryRequest::prepareResponse()
+	 * @see Request::prepareResponse()
 	 *
 	 * @param string $responseData the data returned from the request
-	 * @return IntraLibraryRESTResponse
+	 * @return RESTResponse
 	 */
 	protected function prepareResponse($responseData)
 	{

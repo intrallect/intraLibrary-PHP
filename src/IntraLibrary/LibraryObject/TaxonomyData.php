@@ -1,14 +1,21 @@
 <?php
 
+namespace IntraLibrary\LibraryObject;
+
+use \IntraLibrary\IntraLibraryException;
+use \IntraLibrary\Cache;
+use \IntraLibrary\Configuration;
+use \IntraLibrary\Service\RESTRequest;
+
 /**
- * IntraLibraryTaxonomyData is used to retrieve information
- * (IntraLibraryTaxonomyObject objects) about the available taxonomies
+ * TaxonomyData is used to retrieve information
+ * (TaxonomyObject objects) about the available taxonomies
  *
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  *
  */
-class IntraLibraryTaxonomyData
+class TaxonomyData
 {
 	const CACHE_PREFIX_ID 	  = 'Id';
 	const CACHE_PREFIX_REFID  = 'RefId';
@@ -20,7 +27,7 @@ class IntraLibraryTaxonomyData
 	 * Get an object cached by the runtime
 	 *
 	 * @param string $key The cache key of the object to retrieve
-	 * @return IntraLibraryTaxonomyObject
+	 * @return TaxonomyObject
 	 */
 	private static function _runtimeCached($key)
 	{
@@ -30,11 +37,11 @@ class IntraLibraryTaxonomyData
 	private $retrieveState;
 
 	/**
-	 * Retrieve an IntraLibraryTaxonomyObject by its ref id and source taxonomy
+	 * Retrieve an TaxonomyObject by its ref id and source taxonomy
 	 *
 	 * @param string $objectRefId the object ref id
 	 * @param string $source      the source taxonomy
-	 * @return IntraLibraryTaxonomyObject
+	 * @return TaxonomyObject
 	 */
 	public function retrieveByRefId($objectRefId, $source)
 	{
@@ -46,11 +53,11 @@ class IntraLibraryTaxonomyData
 	}
 
 	/**
-	 * Retrieve an IntraLibraryTaxonomyObject by its ID
+	 * Retrieve an TaxonomyObject by its ID
 	 *
 	 * @param integer $objectId the object id
 	 * @param string  $type     either taxon or taxonomy
-	 * @return IntraLibraryTaxonomyObject
+	 * @return TaxonomyObject
 	 */
 	public function retrieveById($objectId, $type = 'taxon')
 	{
@@ -65,7 +72,7 @@ class IntraLibraryTaxonomyData
 	 * Retrieve an IntraLibaryTaxonomyObject taxonomy by its SOURCE identifier
 	 *
 	 * @param string $source the taxonomy source
-	 * @return IntraLibraryTaxonomyObject
+	 * @return TaxonomyObject
 	 */
 	public function retrieveBySource($source)
 	{
@@ -77,23 +84,23 @@ class IntraLibraryTaxonomyData
 	}
 
 	/**
-	 * Internal retrieve IntraLibraryTaxonomyObject logic
+	 * Internal retrieve TaxonomyObject logic
 	 *
 	 * @param boolean $rebuild if False, will only search the caches
-	 * @return IntraLibraryTaxonomyObject
+	 * @return TaxonomyObject
 	 */
 	private function _retrieve($rebuild = TRUE)
 	{
 		// Check all caches
 		$cacheKey 	= $this->_getRetrieveStateCacheKey();
-		$cached 	= IntraLibraryCache::load($cacheKey);
-		if ($cached instanceof IntraLibraryTaxonomyObject)
+		$cached 	= Cache::load($cacheKey);
+		if ($cached instanceof TaxonomyObject)
 		{
 			return $cached;
 		}
 
 		$cached 	= self::_runtimeCached($cacheKey);
-		if ($cached instanceof IntraLibraryTaxonomyObject)
+		if ($cached instanceof TaxonomyObject)
 		{
 			return $cached;
 		}
@@ -118,12 +125,12 @@ class IntraLibraryTaxonomyData
 	 */
 	public function getAvailableTaxonomies($usingAdmin = FALSE, $useCache = TRUE)
 	{
-		$key = $usingAdmin ? 'taxonomies//admin' : 'taxonomies//user:' . IntraLibraryConfiguration::get('username');
+		$key = $usingAdmin ? 'taxonomies//admin' : 'taxonomies//user:' . Configuration::get('username');
 
 		if ($useCache)
 		{
 			// Check if it's cached..
-			$taxonomyIds = IntraLibraryCache::load($key);
+			$taxonomyIds = Cache::load($key);
 			if ($taxonomyIds !== FALSE)
 			{
 				return $taxonomyIds;
@@ -131,7 +138,7 @@ class IntraLibraryTaxonomyData
 		}
 
 		// Query the Taxonomy REST service
-		$restReq 	= new IntraLibraryRESTRequest();
+		$restReq 	= new RESTRequest();
 		$response 	= $usingAdmin ? $restReq->adminGet('Taxonomy') : $restReq->get('Taxonomy');
 
 		// Response contains usable data
@@ -141,7 +148,7 @@ class IntraLibraryTaxonomyData
 			// parse the new response data
 			$taxonomyIds	= $this->_parseTaxonomyData($data['list']['taxonomy'], 'taxonomy');
 
-			IntraLibraryCache::save($key, $taxonomyIds);
+			Cache::save($key, $taxonomyIds);
 
 			return $taxonomyIds;
 		}
@@ -151,18 +158,18 @@ class IntraLibraryTaxonomyData
 
 	/**
 	 * Recursively parse response data from the webservice call, generate
-	 * IntraLibraryTaxonomyObject objects and cache them.
+	 * TaxonomyObject objects and cache them.
 	 *
 	 * @SuppressWarnings(PHPMD.ShortVariable)
 	 *
-	 * @param array                      $object    The data to parse
-	 * @param string                     $type      The type of taxonomy object
-	 * @param IntraLibraryTaxonomyObject $parentObj The parent object
-	 * @param string                     $source    The taxonomy source
+	 * @param array          $object    The data to parse
+	 * @param string         $type      The type of taxonomy object
+	 * @param TaxonomyObject $parentObj The parent object
+	 * @param string         $source    The taxonomy source
 	 * @throws IntraLibraryException if the $type is invalid
 	 * @return array an array of taxonomy object ids contained at the highest level of the $object data
 	 */
-	private function _parseTaxonomyData($object, $type, IntraLibraryTaxonomyObject $parentObj = NULL, $source = NULL)
+	private function _parseTaxonomyData($object, $type, TaxonomyObject $parentObj = NULL, $source = NULL)
 	{
 		// This is an array of objects
 		if (!empty($object[0]))
@@ -177,11 +184,11 @@ class IntraLibraryTaxonomyData
 		}
 		else if (!empty($object['_attributes']))
 		{
-			$taxonomyObj = new IntraLibraryTaxonomyObject($type, $object['_attributes']);
+			$taxonomyObj = new TaxonomyObject($type, $object['_attributes']);
 			$taxonomyObj->setParent($parentObj);
 
 			// only update the 'source' if this is a TAXONOMY
-			if ($type == IntraLibraryTaxonomyObject::TAXONOMY)
+			if ($type == TaxonomyObject::TAXONOMY)
 			{
 				$source = $taxonomyObj->getSource();
 			}
@@ -206,23 +213,23 @@ class IntraLibraryTaxonomyData
 	/**
 	 * Get the SOURCE of a taxonomy object
 	 *
-	 * @param IntraLibraryTaxonomyObject $object the taxonomy object
+	 * @param TaxonomyObject $object the taxonomy object
 	 * @return string
 	 */
-	public function getSource(IntraLibraryTaxonomyObject $object)
+	public function getSource(TaxonomyObject $object)
 	{
 		if (!$object)
 		{
 			return NULL;
 		}
 
-		if ($object->getType() == IntraLibraryTaxonomyObject::TAXON)
+		if ($object->getType() == TaxonomyObject::TAXON)
 		{
 			$parent	= $this->retrieveById($object->getParentId(), $object->getParentType());
 			return $this->getSource($parent);
 		}
 
-		if ($object->getType() == IntraLibraryTaxonomyObject::TAXONOMY)
+		if ($object->getType() == TaxonomyObject::TAXONOMY)
 		{
 			return $object->getSource();
 		}
@@ -264,28 +271,28 @@ class IntraLibraryTaxonomyData
 	/**
 	 * Cache an intralibrary object
 	 *
-	 * @param IntraLibraryTaxonomyObject $object the object
-	 * @param string                     $source the taxonomy source of this object
+	 * @param TaxonomyObject $object the object
+	 * @param string         $source the taxonomy source of this object
 	 * @return void
 	 */
-	private function _cacheObject(IntraLibraryTaxonomyObject $object, $source)
+	private function _cacheObject(TaxonomyObject $object, $source)
 	{
 		$type 		= $object->getType();
 
 		$key_id 	= $this->_getCacheKey($object->getId(), self::CACHE_PREFIX_ID, $type);
-		IntraLibraryCache::save($key_id, $object, 0);
+		Cache::save($key_id, $object, 0);
 		self::$runtimeCache[$key_id] = $object;
 
-		if ($type == IntraLibraryTaxonomyObject::TAXON)
+		if ($type == TaxonomyObject::TAXON)
 		{
 			$key_refId	= $this->_getCacheKey($object->getRefId(), self::CACHE_PREFIX_REFID, $type, $source);
-			IntraLibraryCache::save($key_refId, $object, 0);
+			Cache::save($key_refId, $object, 0);
 			self::$runtimeCache[$key_refId] = $object;
 		}
-		else if ($type == IntraLibraryTaxonomyObject::TAXONOMY)
+		else if ($type == TaxonomyObject::TAXONOMY)
 		{
 			$key_source	= $this->_getCacheKey($object->getSource(), self::CACHE_PREFIX_SOURCE, $type);
-			IntraLibraryCache::save($key_source, $object, 0);
+			Cache::save($key_source, $object, 0);
 			self::$runtimeCache[$key_source] = $object;
 		}
 	}

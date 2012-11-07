@@ -1,5 +1,9 @@
 <?php
 
+namespace IntraLibrary\Service;
+
+use \IntraLibrary\IntraLibraryException;
+
 /**
  * A response object class for the IntraLibrary REST service
  * expecting data in JSON format
@@ -7,7 +11,7 @@
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  */
-class IntraLibraryRESTResponse
+class RESTResponse
 {
 	private $data = FALSE;
 	private $error;
@@ -43,7 +47,7 @@ class IntraLibraryRESTResponse
 		else
 		{
 			$this->error = TRUE;
-			throw new IntraLibraryException('IntraLibraryRESTResponse responseData invalid');
+			throw new IntraLibraryException('RESTResponse responseData invalid');
 		}
 	}
 

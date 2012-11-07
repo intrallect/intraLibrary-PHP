@@ -1,5 +1,9 @@
 <?php
 
+namespace IntraLibrary;
+
+use \Exception;
+
 /**
  * IntraLibraryException class
  *

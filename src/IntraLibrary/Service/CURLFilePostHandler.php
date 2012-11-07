@@ -1,12 +1,16 @@
 <?php
 
+namespace IntraLibrary\Service;
+
+use \IntraLibrary\IntraLibraryException;
+
 /**
- * IntraLibraryCURLFileHandler post a file via curl requests
+ * CURLFileHandler post a file via curl requests
  *
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  */
-class IntraLibraryCURLFilePostHandler implements IntraLibraryCURLHandler
+class CURLFilePostHandler implements CURLHandler
 {
 	private $filepath;
 	private $fileParameter;

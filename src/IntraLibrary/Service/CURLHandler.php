@@ -1,13 +1,17 @@
 <?php
 
+namespace IntraLibrary\Service;
+
+use \IntraLibrary\IntraLibraryException;
+
 /**
- * IntraLibraryCURLHanlder provides an interface to interact with
- * IntraLibraryRequest curl handles
+ * CURLHanlder provides an interface to interact with
+ * Request curl handles
  *
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  */
-interface IntraLibraryCURLHandler
+interface CURLHandler
 {
 
 	/**
