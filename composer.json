@@ -1,11 +1,16 @@
 {
-	"name": "IntraLibrary-PHP",
+	"name": "intrallect/intralibrary",
+	"description": "intraLibrary PHP client library",
 	"version": "2.0-dev",
 	"require": {
 	    "php": ">=5.3"
 	},
 	"autoload": {
-		"psr-0": {"IntraLibrary": "src/"},
-		"classmap": ["src/swordapp-php-library/swordappclient.php"]
+		"psr-0": {
+			"IntraLibrary": "src/"
+		},
+		"classmap": [
+		    "src/swordapp-php-library/swordappclient.php"
+		]
 	}
 }
