@@ -11,10 +11,10 @@ class IntraLibraryObject
 	private $identifier;
 	private $catalog;
 	private $data;
-	
+
 	/**
 	 * Create an IntraLibraryObject object
-	 * 
+	 *
 	 * @param array $data the object data
 	 */
 	public function __construct($data)
@@ -23,10 +23,10 @@ class IntraLibraryObject
 		$this->catalog 		= $data['catalog'];
 		$this->data			= $data;
 	}
-	
+
 	/**
 	 * Get this object's IntraLibrary catalog Id
-	 * 
+	 *
 	 * @param string $catalog [optional] if not null, return the Id associated with this catalog
 	 * @return string
 	 */
@@ -41,7 +41,7 @@ class IntraLibraryObject
 				{
 					return $this->identifier[$key];
 				}
-				
+
 				return NULL;
 			}
 			else
@@ -50,15 +50,15 @@ class IntraLibraryObject
 				return $this->catalog == $catalog ? $this->identifier : NULL;
 			}
 		}
-		
+
 		// If no catalog is specified, return the first ID
 		return is_array($this->identifier) ? $this->identifier[0] : $this->identifier;
 	}
-	
+
 
 	/**
 	 * Get data for this object
-	 * 
+	 *
 	 * @param string $name the name of the data
 	 * @return mixed
 	 */
@@ -66,7 +66,7 @@ class IntraLibraryObject
 	{
 		return isset($this->data[$name]) ? $this->data[$name] : NULL;
 	}
-	
+
 	/**
 	 * Get classifications for this object as an array keyed by their LOM source.
 	 *
@@ -81,7 +81,7 @@ class IntraLibraryObject
 		{
 			return $rawClassifications;
 		}
-		
+
 		$classifications = array();
 		foreach ($rawClassifications as $lomSource => $taxonGroups)
 		{
@@ -89,7 +89,7 @@ class IntraLibraryObject
 			{
 				$classifications[$lomSource] = array();
 			}
-			
+
 			foreach ($taxonGroups as $taxons)
 			{
 				if ($requestingLevel)
@@ -97,11 +97,11 @@ class IntraLibraryObject
 					$numTaxons = count($taxons);
 					if ($level <= 0 || $level > $numTaxons)
 						throw new IntraLibraryException("Invalid Classification Level: $level (max level: $numTaxons)");
-					
+
 					$refIds = array_keys($taxons);
 					$refId = $refIds[$numTaxons - $level];
 					$taxon = $taxons[$refId];
-					
+
 					$classifications[$lomSource][$refId] = $taxon;
 				}
 				else
@@ -110,7 +110,7 @@ class IntraLibraryObject
 				}
 			}
 		}
-	
+
 		return $classifications;
 	}
 }

@@ -9,6 +9,8 @@
 class IntraLibrarySRWResponse extends IntraLibraryXMLResponse
 {
 	private static $_namespaces = array(
+			'SRW' =>            'http://www.loc.gov/zing/srw/',
+			'DIAG' =>           'http://www.loc.gov/zing/srw/diagnostics',
 			'package' => 		'info:srw/extension/13/package-v1.0',
 			'intralibrary' => 	'info:srw/extension/13/intralibrary-v1.0',
 			'review' => 		'info:srw/extension/13/review-v1.0',
@@ -123,5 +125,61 @@ class IntraLibrarySRWResponse extends IntraLibraryXMLResponse
 	public function getRecordSchema()
 	{
 		return $this->recordSchema;
+	}
+
+	/**
+	 * Get the Query string
+	 *
+	 * @return Ambigous <string, NULL, multitype:NULL >
+	 */
+	public function getQuery()
+	{
+		return $this->getText('/SRW:searchRetrieveResponse/SRW:echoedSearchRetrieveRequest/SRW:query');
+	}
+
+	/**
+	 * Get the diagnostics message, will be NULL unless there has been an error
+	 *
+	 * @return Ambigous <string, NULL, multitype:NULL > NULL unless there has been an error
+	 */
+	public function getDiagnosticsMessage()
+	{
+		return $this->getText('/SRW:searchRetrieveResponse/SRW:diagnostics/DIAG:diagnostic/DIAG:message');
+	}
+
+	/**
+	 * Get the diagnostics details, will be NULL unless there has been an error
+	 *
+	 * @return Ambigous <string, NULL, multitype:NULL >
+	 */
+	public function getDiagnosticsDetails()
+	{
+		return $this->getText('/SRW:searchRetrieveResponse/SRW:diagnostics/DIAG:diagnostic/DIAG:details');
+	}
+
+	/**
+	 * Get error data for this response
+	 *
+	 * @return NULL|string
+	 */
+	public function getError()
+	{
+		$error = $this->getDiagnosticsMessage();
+		if (!$error)
+		{
+			return NULL;
+		}
+
+		if ($details = $this->getDiagnosticsDetails())
+		{
+			$error .= " [$details]";
+		}
+
+		if ($query = $this->getQuery())
+		{
+			$error .= " (query: $query)";
+		}
+
+		return $error;
 	}
 }

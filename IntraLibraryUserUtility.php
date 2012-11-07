@@ -2,7 +2,7 @@
 
 /**
  * A helper class to manage intralibrary users
- *  
+ *
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  */
@@ -10,7 +10,7 @@ class IntraLibraryUserUtility
 {
 	/**
 	 * Create an IntraLibrary student user
-	 * 
+	 *
 	 * @param string $username The requested username
 	 * @param string $userRole The user role
 	 * @param string $groupIds The group ids to associate to this user
@@ -29,7 +29,7 @@ class IntraLibraryUserUtility
 			catch (IntraLibraryException $ex)
 			{
 				$code = $ex->getCode();
-		
+
 				if ($code == IntraLibraryException::USER_EXISTS)
 				{
 					// If the user exists, let's try to generate a unique username
@@ -44,13 +44,13 @@ class IntraLibraryUserUtility
 				}
 			}
 		}
-		
+
 		return NULL;
 	}
-	
+
 	/**
 	 * Create an IntraLibrary user
-	 * 
+	 *
 	 * @param string  $username The username
 	 * @param string  $userRole The user role
 	 * @param integer $groupIds The group
@@ -66,20 +66,20 @@ class IntraLibraryUserUtility
 			'user_roles' => $userRole,
 			'selected_group_ids' => $groupIds
 		));
-		
+
 		if ($error = $resp->getError())
 		{
 			throw new IntraLibraryException($error, -1);
 		}
-		
+
 		$data = $resp->getData();
-		
+
 		return $data['user']['username'];
 	}
-	
+
 	/**
 	 * Generate a username-based hash for use as a password
-	 * 
+	 *
 	 * @param string $username the username
 	 * @return string
 	 */
@@ -87,10 +87,10 @@ class IntraLibraryUserUtility
 	{
 		return substr(md5($username . 'salty' . $username), 0, 10);
 	}
-	
+
 	/**
 	 * Delete user
-	 * 
+	 *
 	 * @param string $username the username
 	 * @return void
 	 */

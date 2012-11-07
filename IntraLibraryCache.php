@@ -1,7 +1,8 @@
 <?php
+
 /**
  * Configurable Caching tool for IntraLibrary
- * 
+ *
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  *
@@ -10,7 +11,7 @@ class IntraLibraryCache extends IntraLibraryProxy
 {
 	/**
 	 * Load from the cache
-	 * 
+	 *
 	 * @param string $key the key to load
 	 * @return mixed
 	 */
@@ -18,10 +19,10 @@ class IntraLibraryCache extends IntraLibraryProxy
 	{
 		return parent::invoke(__FUNCTION__, func_get_args());
 	}
-	
+
 	/**
 	 * Save to the cache
-	 * 
+	 *
 	 * @param string  $key     the key
 	 * @param mixed   $data    the data
 	 * @param integer $expires expiry length

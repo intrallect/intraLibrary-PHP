@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * IntraLibrary XML Response base class
@@ -8,12 +8,12 @@
  */
 abstract class IntraLibraryXMLResponse
 {
-	
+
 	protected $xPath;
-	
+
 	/**
 	 * Load XML into the response object
-	 * 
+	 *
 	 * @param string $xmlResponse the XML response
 	 * @return void
 	 */
@@ -23,18 +23,18 @@ abstract class IntraLibraryXMLResponse
 		{
 			return;
 		}
-		
+
 		$xmlDocument = new DOMDocument();
 		$xmlDocument->loadXML($xmlResponse);
-		
+
 		$this->xPath = new DOMXPath($xmlDocument);
-		
+
 		$this->consumeDOM();
 	}
-	
+
 	/**
 	 * Run an xPath query
-	 * 
+	 *
 	 * @param string  $expression  the xpath expression
 	 * @param DOMNode $contextNode the context node
 	 * @return DOMNodeList
@@ -43,16 +43,16 @@ abstract class IntraLibraryXMLResponse
 	{
 		return $this->xPath->query($expression, $contextNode);
 	}
-	
+
 	/**
 	 * Get the text value of a node (or an array of values if multiple nodes are matched
 	 * by the expression)
-	 * 
+	 *
 	 * @param string  $expression  the xpath expression targeting the text node
 	 * 		                       element (without the trailing '/text()' function)
 	 * @param DOMNode $contextNode the context node used in the xpath query
 	 * @param boolean $wrap        if true, single results will be wrapped in an array
-	 * @return string | array 
+	 * @return string | array
 	 */
 	public function getText($expression, DOMNode $contextNode = NULL, $wrap = FALSE)
 	{
@@ -63,15 +63,15 @@ abstract class IntraLibraryXMLResponse
 			$domNodeList = $this->xPath->query($expression . '/text()');
 		else
 			$domNodeList = $this->xPath->query($expression . '/text()', $contextNode);
-		
-		
+
+
 		if ($domNodeList && $domNodeList->length > 0)
 		{
 			if ($domNodeList->length == 1 && !$wrap)
 			{
 				return $domNodeList->item(0)->wholeText;
 			}
-			
+
 			$text = array();
 			foreach ($domNodeList as $item)
 			{
@@ -79,10 +79,10 @@ abstract class IntraLibraryXMLResponse
 			}
 			return $text;
 		}
-		
+
 		return NULL;
 	}
-	
+
 	/**
 	 * Subclasses should use this function to traverse the dom using xpath
 	 * and store any data for future access.

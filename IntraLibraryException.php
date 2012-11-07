@@ -2,17 +2,17 @@
 
 /**
  * IntraLibraryException class
- * 
+ *
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  */
 class IntraLibraryException extends Exception
 {
 	const USER_EXISTS = 1;
-	
+
 	/**
 	 * Create an IntraLibraryException object
-	 * 
+	 *
 	 * @param string  $message the message
 	 * @param integer $code    the exception code (pass -1 to autodetect the code based on message)
 	 */
@@ -25,7 +25,7 @@ class IntraLibraryException extends Exception
 				$code = self::USER_EXISTS;
 			}
 		}
-		
+
 		parent::__construct($message, $code);
 	}
 }
