@@ -6,3 +6,4 @@ Changes in 2.0:
 - all classes under 'IntraLibrary' namespace
 
 Packaged with 'swordapp-php-library'
+
