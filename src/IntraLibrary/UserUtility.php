@@ -2,6 +2,8 @@
 
 namespace IntraLibrary;
 
+use \IntraLibrary\Service\RESTRequest;
+
 /**
  * A helper class to manage intralibrary users
  *
@@ -61,7 +63,7 @@ class UserUtility
 	 */
 	private static function _createUser($username, $userRole, $groupIds)
 	{
-		$req 	= new IntraLibraryRESTRequest();
+		$req 	= new RESTRequest();
 		$resp 	= $req->adminGet('User/createWithGroup', array(
 			'username' => $username,
 			'password' => self::generatePassword($username),
@@ -98,7 +100,7 @@ class UserUtility
 	 */
 	public static function deleteUser($username)
 	{
-		$request = new IntraLibraryRESTRequest();
+		$request = new RESTRequest();
 		$request->adminGet('User/deleteUser', array('username' => $username));
 	}
 }

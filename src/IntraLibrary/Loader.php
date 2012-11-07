@@ -26,7 +26,7 @@ class Loader
 	/**
 	 * Get the main instance of the autoloader
 	 *
-	 * @return IntraLibraryLoader
+	 * @return Loader
 	 */
 	public static function getInstance()
 	{
@@ -37,7 +37,7 @@ class Loader
 	private $baseDir;
 
 	/**
-	 * Create an IntraLibraryLoader
+	 * Create a Loader
 	 *
 	 * @param strign $baseDir the directory that hosts PHP classes
 	 */

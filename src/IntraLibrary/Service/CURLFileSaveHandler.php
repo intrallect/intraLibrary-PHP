@@ -5,7 +5,7 @@ namespace IntraLibrary\Service;
 use \IntraLibrary\IntraLibraryException;
 
 /**
- * IntraLibraryCURLFileHandler saves curl requests to files
+ * CURLFileHandler saves curl requests to files
  *
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>

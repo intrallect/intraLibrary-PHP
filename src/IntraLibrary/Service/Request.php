@@ -49,7 +49,7 @@ class Request
 	 * Construct an IntraLibrary request object
 	 *
 	 * @param string $apiEndpoint the api endpoint to be called (appended to the intralibrary hostname)
-	 * @throws IntraLibraryException if a hostname has not been configured with the IntraLibraryConfiguration class
+	 * @throws IntraLibraryException if a hostname has not been configured with the Configuration class
 	 */
 	public function __construct($apiEndpoint)
 	{

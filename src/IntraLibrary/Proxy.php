@@ -3,7 +3,7 @@
 namespace IntraLibrary;
 
 /**
- * IntraLibraryProxy is used to register client implementations of functions
+ * Proxy is used to register client implementations of functions
  * to be used with IntraLibrary.
  *
  * Subclasses should define a public static function for each available action as follows:

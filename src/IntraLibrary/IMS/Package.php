@@ -2,6 +2,8 @@
 
 namespace \IntraLibrary\IMS;
 
+use \IntraLibrary\Debug;
+
 /**
  * IntraLibrary IMS Content Package class
  */
@@ -70,7 +72,7 @@ class Package
 		catch (Exception $ex)
 		{
 			// log any exceptions
-			IntraLibraryDebug::log($ex->getMessage());
+			Debug::log($ex->getMessage());
 		}
 
 		// ensure it was saved properly
