@@ -11,120 +11,63 @@ namespace IntraLibrary;
  */
 class Loader
 {
-	private static $_instance;
-
 	/**
-	 * Register the loader SPL autoloader stack
+	 * Register on the SPL autoloader stack
 	 *
 	 * @return void
 	 */
-	public static function registerAutoloader()
+	public static function register()
 	{
-		spl_autoload_register(array(self::getInstance(), 'load'));
-	}
-
-	/**
-	 * Get the main instance of the autoloader
-	 *
-	 * @return Loader
-	 */
-	public static function getInstance()
-	{
-		return self::$_instance ? self::$_instance : (self::$_instance = new self(__DIR__));
-	}
-
-	private $classes;
-	private $baseDir;
-
-	/**
-	 * Create a Loader
-	 *
-	 * @param strign $baseDir the directory that hosts PHP classes
-	 */
-	public function __construct($baseDir)
-	{
-		$this->baseDir = $baseDir;
-		$this->loadClasses();
+		spl_autoload_register(array(new self(), 'load'));
 	}
 
 	/**
 	 * Classloader
 	 *
-	 * @param string $classname the classname to load
+	 * @param string $class the classname to load
 	 * @return boolean FALSE if class was not loaded
 	 */
-	public function load($classname)
+	public function load($class)
 	{
-		if (empty($this->classes[$classname]) ||
-			!include($this->classes[$classname]))
+		if ($file = $this->_findFile($class))
 		{
-			return FALSE;
-		}
+            include $file;
+
+            return TRUE;
+        }
 	}
 
 	/**
-	 * Get all PHP classes part of IntraLibrary
+	 * Finds the path to the file where the class is defined.
 	 *
-	 * @return void
-	 */
-	public function loadClasses()
-	{
-		$this->classes = array();
-
-		foreach (self::_getFiles($this->baseDir) as $file)
-		{
-			$pathinfo = pathinfo($file);
-			if (isset($pathinfo['extension']) && $pathinfo['extension'] == 'php')
-			{
-				$this->classes[$pathinfo['filename']] = $file;
-			}
-		}
-	}
-
-	/**
-	 * Get all classes found by this loader
+	 * @param string $class The name of the class
 	 *
-	 * @return array an associative array mapping classname => filename
+	 * @return string|NULL The path, if found
 	 */
-	public function getClasses()
+	private function _findFile($class)
 	{
-		if (empty($this->classes))
+		if ('\\' == $class[0])
 		{
-			$this->loadClasses();
+			$class = substr($class, 1);
 		}
 
-		return $this->classes;
-	}
-
-	/**
-	 * Get all files contained in this directory, and it's subdirectories
-	 *
-	 * @param string $directory the directory to look into
-	 * @return array a list of files found
-	 */
-	private function _getFiles($directory)
-	{
-		$directory 	= rtrim($directory, '/') . '/';
-		$list 		= array();
-
-		if ($handle = opendir($directory))
+		if (($pos = strrpos($class, '\\')) !== FALSE)
 		{
-			while (($file = readdir($handle)) !== FALSE)
-			{
-				if (is_dir($directory . $file) && $file != '.' && $file != '..')
-				{
-					$sublist = $this->_getFiles($directory . $file);
-					$list = array_merge($list, $sublist);
-				}
-				else if (is_file($directory . $file))
-				{
-					$list[] = $directory . $file;
-				}
-
-			}
-			closedir($handle);
+			$classPath = str_replace('\\', DIRECTORY_SEPARATOR, substr($class, 0, $pos)) . DIRECTORY_SEPARATOR;
+			$className = substr($class, $pos + 1);
+		}
+		else
+		{
+			$classPath = '';
+			$className = $class;
 		}
 
-		return $list;
+		$filePath = dirname(__DIR__) . DIRECTORY_SEPARATOR . $classPath . $className . '.php';
+		if (file_exists($filePath))
+		{
+			return $filePath;
+		}
+
+		return FALSE;
 	}
 }
