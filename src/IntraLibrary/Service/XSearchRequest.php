@@ -54,6 +54,11 @@ class XSearchRequest extends Request
 			$queryParams['maximumRecords'] = (int) $params['limit'];
 		}
 
+		if (!empty($params['startRecord']) && ((int) $params['startRecord']) != 0)
+		{
+			$queryParams['startRecord'] = (int) $params['startRecord'];
+		}
+
 		if (!empty($params['showUnpublished']))
 		{
 			$queryParams['showUnpublished'] = 'true';
