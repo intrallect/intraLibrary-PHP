@@ -5,12 +5,16 @@ namespace IntraLibrary;
 /**
  * Class loader for IntraLibrary-PHP
  *
+ * Note: This is unnecessary if IntraLibrary-PHP is loaded via composer
+ *
  * @package IntraLibrary_PHP
  * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  *
  */
 class Loader
 {
+	private static $_IS_REGISTERED = FALSE;
+
 	/**
 	 * Register on the SPL autoloader stack
 	 *
@@ -18,7 +22,22 @@ class Loader
 	 */
 	public static function register()
 	{
-		spl_autoload_register(array(new self(), 'load'));
+		if (self::$_IS_REGISTERED) return TRUE;
+
+		self::$_IS_REGISTERED = TRUE;
+
+		// If composer is available
+		// check to see if it has already loaded this namespace
+		if (class_exists('ComposerAutoloaderInit'))
+		{
+			$prefixes = \ComposerAutoloaderInit::getLoader()->getPrefixes();
+			if (isset($prefixes[__NAMESPACE__]))
+			{
+				return TRUE;
+			}
+		}
+
+		return spl_autoload_register(array(new self(), 'load'));
 	}
 
 	/**
