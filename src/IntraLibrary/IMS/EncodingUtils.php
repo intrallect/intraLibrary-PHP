@@ -9,7 +9,7 @@ class EncodingUtils
 	 */
 	public static function html_convert_entities($string) {
 		return preg_replace_callback('/&([a-zA-Z][a-zA-Z0-9]+);/S',
-				'EncodingUtils::convert_entity', $string);
+				array(__CLASS__, 'convert_entity'), $string);
 	}
 
 	/* Swap HTML named entity with its numeric equivalent. If the entity

@@ -82,7 +82,7 @@ class Package
 		}
 
 		// create a zip archive with the manifest
-		$zip = new ZipArchive();
+		$zip = new \ZipArchive();
 		$zip->open($packagePath, ZIPARCHIVE::CREATE);
 		$zip->addFile($manifestPath, 'imsmanifest.xml');
 
