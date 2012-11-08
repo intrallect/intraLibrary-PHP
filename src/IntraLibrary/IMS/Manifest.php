@@ -1,6 +1,6 @@
 <?php
 
-namespace \IntraLibrary\IMS;
+namespace IntraLibrary\IMS;
 
 /**
  * IMS Manifest builder
