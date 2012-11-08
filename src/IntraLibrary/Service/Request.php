@@ -175,6 +175,11 @@ class Request
 		$this->curlHandle = curl_init();
 
 		$cookiePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'intralibrary-admin.cookie';
+		if (!is_writable($cookiePath))
+		{
+			throw new IntraLibraryException("Unable to write to IntraLibrary admin cookie $cookiePath");
+		}
+
 		curl_setopt($this->curlHandle, CURLOPT_COOKIEFILE, $cookiePath);
 		curl_setopt($this->curlHandle, CURLOPT_COOKIEJAR, $cookiePath);
 
