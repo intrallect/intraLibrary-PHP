@@ -3,6 +3,7 @@
 namespace IntraLibrary\Service;
 
 use \SWORDAPPClient;
+use \IntraLibrary\Debug;
 use \IntraLibrary\Configuration;
 
 /**
@@ -32,6 +33,7 @@ class SWORDService
 	public function get_deposit_details()
 	{
 		$url 		= Configuration::get('hostname') . '/IntraLibrary-Deposit/service';
+		Debug::log("SWORD requesting deposit details from $url");
 		$service 	= $this->client->servicedocument($url, $this->username, $this->password, '');
 
 		$deposits 	= array();
@@ -61,6 +63,7 @@ class SWORDService
 	 */
 	public function deposit($url, $filename, $MD5_check = FALSE)
 	{
+		Debug::log("SWORD depositing $filename to $url");
 		return $this->client->deposit(
 				$url,
 				$this->username,
