@@ -48,7 +48,7 @@ class Loader
 	 */
 	public static function loadSWORDAPP_PHP_CLIENT()
 	{
-		if (!class_exists('SWORDAPPClient'))
+		if (!class_exists('SWORDAPPClient', FALSE))
 		{
 			include __DIR__ . '/../swordapp-php-library/swordappclient.php';
 		}

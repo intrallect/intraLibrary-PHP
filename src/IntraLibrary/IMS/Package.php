@@ -2,6 +2,7 @@
 
 namespace IntraLibrary\IMS;
 
+use \ZipArchive;
 use \IntraLibrary\Debug;
 
 /**
@@ -82,8 +83,8 @@ class Package
 		}
 
 		// create a zip archive with the manifest
-		$zip = new \ZipArchive();
-		$zip->open($packagePath, ZIPARCHIVE::CREATE);
+		$zip = new ZipArchive();
+		$zip->open($packagePath, ZipArchive::CREATE);
 		$zip->addFile($manifestPath, 'imsmanifest.xml');
 
 		// add a file if it's been set

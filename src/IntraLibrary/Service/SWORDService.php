@@ -3,6 +3,7 @@
 namespace IntraLibrary\Service;
 
 use \SWORDAPPClient;
+use \IntraLibrary\Loader;
 use \IntraLibrary\Debug;
 use \IntraLibrary\Configuration;
 
@@ -20,6 +21,7 @@ class SWORDService
 
 	public function __construct($username, $password)
 	{
+		Loader::loadSWORDAPP_PHP_CLIENT();
 		$this->client = new SWORDAPPClient();
 		$this->username = $username;
 		$this->password = $password;
