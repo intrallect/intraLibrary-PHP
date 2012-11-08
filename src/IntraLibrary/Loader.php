@@ -41,6 +41,20 @@ class Loader
 	}
 
 	/**
+	 * Loads the SWORDAPPClient class.
+	 * TODO: find a cleaner approach to packaging & loading swordapp-php-library
+	 *
+	 * @return void
+	 */
+	public static function loadSWORDAPP_PHP_CLIENT()
+	{
+		if (!class_exists('SWORDAPPClient'))
+		{
+			include __DIR__ . '/../swordapp-php-library/swordappclient.php';
+		}
+	}
+
+	/**
 	 * Classloader
 	 *
 	 * @param string $class the classname to load
