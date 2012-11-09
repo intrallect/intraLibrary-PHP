@@ -116,7 +116,7 @@ class IntraLibraryIMSManifest
 	 */
 	public function addDescription($description)
 	{
-		$this->variables['Descriptions'][] = $description;
+		$this->variables['Descriptions'][] = $this->_sanitiseForXML($description);
 	}
 
 	/**
