@@ -175,7 +175,7 @@ class Request
 		$this->curlHandle = curl_init();
 
 		$cookiePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'intralibrary-admin.cookie';
-		if (!is_writable($cookiePath))
+		if (!$this->_is_writable($cookiePath))
 		{
 			throw new IntraLibraryException("Unable to write to IntraLibrary admin cookie $cookiePath");
 		}
@@ -264,5 +264,27 @@ class Request
 	public function getLastContentType()
 	{
 		return $this->responseType;
+	}
+
+	/**
+	 * Determines whether a filepath is writable
+	 *
+	 * @param string $filename
+	 * @return boolean
+	 */
+	private function _is_writable($filename)
+	{
+		if (file_exists($filename))
+		{
+			return is_writable($filename);
+		}
+
+		$filename = dirname($filename);
+		if (is_dir($filename))
+		{
+			return is_writable($filename);
+		}
+
+		return FALSE;
 	}
 }
