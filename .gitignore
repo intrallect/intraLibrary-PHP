@@ -1,6 +1,10 @@
+# Eclipse
 /.settings/
 /.project
 /.buildpath
 
+# Phing
+/build
 
+# Composer
 /vendor/

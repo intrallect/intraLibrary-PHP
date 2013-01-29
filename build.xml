@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="intraLibrary-PHP" default="build">
+
+	<property name="builddir" value="build" />
+	<property name="srcdir" value="src/IntraLibrary" />
+	<property name="logdir" value="${builddir}/logs" />
+
+	<target name="clean">
+		<echo msg="Clean..." />
+		<delete dir="${builddir}" />
+	</target>
+
+	<target name="prepare" depends="clean">
+		<echo msg="Prepare..." />
+		<mkdir dir="${builddir}" />
+		<mkdir dir="${logdir}" />
+		<echo msg="Setting permissions..." />
+		<exec command="chmod 777 ${builddir}" checkreturn="True" />
+		<exec command="chmod 777 ${logdir}" checkreturn="True" />
+	</target>
+
+	<!-- Regular Build -->
+	<target name="build" depends="prepare,phpcs,pdepend,phpmd">
+		<echo msg="Running Build" />
+	</target>
+
+	<!-- PHP dependency checker -->
+	<target name="pdepend">
+		<echo msg="PHP Depend..." />
+		<exec command="pdepend --jdepend-xml=${logdir}/jdepend.xml ${srcdir}" escape="false" />
+	</target>
+
+	<!-- PHP CodeSniffer -->
+	<target name="phpcs">
+		<echo msg="PHP CodeSniffer..." />
+		<exec executable="phpcs" escape="false">
+			<arg value="--standard=resources/CodeSniffer/Standards/Elgg" />
+			<arg value="--report=checkstyle" />
+			<arg value="--ignore=vendors/IntraLibrary-PHP/sword/swordapp-php-library,vendors/SCORMCloud_PHPLibrary" />
+			<arg value="${srcdir}" />
+			<arg value=">" />
+			<arg value="${logdir}/checkstyle.xml" />
+		</exec>
+	</target>
+
+	<!-- PHP Mess Detector -->
+	<target name="phpmd">
+		<echo msg="PHPMD..." />
+
+		<exec executable="phpmd" escape="false">
+			<arg value="${srcdir}" />
+			<arg value="xml" />
+			<arg value="codesize,design,naming,unusedcode" />
+			<arg value="--exclude" />
+			<arg value="vendors/SCORMCloud_PHPLibrary/,vendors/IntraLibrary-PHP/sword/swordapp-php-library" />
+			<arg value=">" />
+			<arg value="${logdir}/pmd.xml" />
+		</exec>
+	</target>
+
+	<!-- Unit Tests -->
+	<!-- Disabled as there are none
+	<target name="simpletest">
+		<if>
+			<isset property="phpPath" />
+			<then>
+				<echo msg="Using PHP Path ${phpPath} for SimpleTest unit testing" />
+			</then>
+			<else>
+				<property name="phpPath" value="php" />
+				<echo msg="Using default PHP Path" />
+			</else>
+		</if>
+		<echo msg="SimpleTest..." />
+		<exec command="${phpPath} ${plugindir}/mastery/tests/suite.php ${logdir}/simpletests.xml" />
+		<exec command="xsltproc resources/simpletest_to_junit.xsl ${logdir}/simpletests.xml > ${logdir}/junittests.xml" />
+	</target>
+	-->
+
+</project>
