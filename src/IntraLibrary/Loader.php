@@ -13,31 +13,35 @@ namespace IntraLibrary;
  */
 class Loader
 {
-	private static $_IS_REGISTERED = FALSE;
+	private static $_IS_REGISTERED = array();
 
 	/**
 	 * Register on the SPL autoloader stack
 	 *
-	 * @return void
+	 * @param string $path [optional] autoload path
+	 * @return boolean true on success
 	 */
-	public static function register()
+	public static function register($path = NULL)
 	{
-		if (self::$_IS_REGISTERED) return TRUE;
-
-		self::$_IS_REGISTERED = TRUE;
-
-		// If composer is available
-		// check to see if it has already loaded this namespace
-		if (class_exists('ComposerAutoloaderInit'))
+		if (empty(self::$_IS_REGISTERED[$path]))
 		{
-			$prefixes = \ComposerAutoloaderInit::getLoader()->getPrefixes();
-			if (isset($prefixes[__NAMESPACE__]))
+			self::$_IS_REGISTERED[$path] = TRUE;
+
+			// If composer is available
+			// check to see if it has already loaded this namespace
+			if (class_exists('ComposerAutoloaderInit'))
 			{
-				return TRUE;
+				$prefixes = \ComposerAutoloaderInit::getLoader()->getPrefixes();
+				if (isset($prefixes[__NAMESPACE__]))
+				{
+					return TRUE;
+				}
 			}
+
+			return spl_autoload_register(array(new self($path), 'load'));
 		}
 
-		return spl_autoload_register(array(new self(), 'load'));
+		return TRUE;
 	}
 
 	/**
@@ -51,6 +55,33 @@ class Loader
 		if (!class_exists('SWORDAPPClient', FALSE))
 		{
 			include __DIR__ . '/../swordapp-php-library/swordappclient.php';
+		}
+	}
+
+
+	private $path;
+
+	/**
+	 * Create a loader
+	 *
+	 * @param string $path [opional] the classpath to search
+	 */
+	public function __construct($path = NULL)
+	{
+		if ($path)
+		{
+			if (is_dir($path))
+			{
+				$this->path = realpath($path);
+			}
+			else
+			{
+				throw new IntraLibraryException("Unable to create loader: $path is not a directory");
+			}
+		}
+		else
+		{
+			$this->path = dirname(__FILE__);
 		}
 	}
 
