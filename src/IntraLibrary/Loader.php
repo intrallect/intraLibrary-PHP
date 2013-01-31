@@ -126,7 +126,7 @@ class Loader
 			$className = $class;
 		}
 
-		$filePath = dirname(__DIR__) . DIRECTORY_SEPARATOR . $classPath . $className . '.php';
+		$filePath = $this->path . DIRECTORY_SEPARATOR . $classPath . $className . '.php';
 		if (file_exists($filePath))
 		{
 			return $filePath;
