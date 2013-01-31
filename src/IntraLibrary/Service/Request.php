@@ -110,6 +110,8 @@ class Request
 		curl_setopt($this->curlHandle, CURLOPT_RETURNTRANSFER, TRUE);
 		curl_setopt($this->curlHandle, CURLOPT_HEADER, FALSE);
 		curl_setopt($this->curlHandle, CURLINFO_HEADER_OUT, TRUE);
+		curl_setopt($this->curlHandle, CURLOPT_VERBOSE, 1);
+		curl_setopt($this->curlHandle, CURLOPT_HEADER, 1);
 
 		if ($this->username && $this->password)
 		{
@@ -124,8 +126,14 @@ class Request
 
 		// execute
 		$responseData = curl_exec($this->curlHandle);
+
+		$headerSize = curl_getinfo($this->curlHandle, CURLINFO_HEADER_SIZE);
+		$header = substr($responseData, 0, $headerSize);
+		$responseData = substr($responseData, $headerSize);
+
 		// and log this request
 		Debug::log(curl_getinfo($this->curlHandle, CURLINFO_HEADER_OUT));
+		Debug::log("Response Headers: $header");
 
 		if ($this->curlHandler)
 		{

@@ -45,6 +45,8 @@ class CURLFileSaveHandler implements CURLHandler
 			throw new IntraLibraryException('Unable to create file for saving');
 		}
 
+		curl_setopt($curlHandle, CURLOPT_BINARYTRANSFER, 1);
+		curl_setopt($curlHandle, CURLOPT_TIMEOUT, 50);
 		curl_setopt($curlHandle, CURLOPT_FILE, $this->file);
 	}
 
