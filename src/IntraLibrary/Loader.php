@@ -81,7 +81,7 @@ class Loader
 		}
 		else
 		{
-			$this->path = dirname(__FILE__);
+			$this->path = dirname(__DIR__);
 		}
 	}
 
