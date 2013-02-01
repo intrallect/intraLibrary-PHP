@@ -16,9 +16,10 @@ class CURLFilePostHandler implements CURLHandler
 	private $fileParameter;
 
 	/**
+	 * Create a CURLFileHandler object
 	 *
-	 * @param string $filepath
-	 * @param string $fileParameter
+	 * @param string $filepath      the path to the file
+	 * @param string $fileParameter the name of the parameter for this file
 	 */
 	public function __construct($filepath, $fileParameter)
 	{
@@ -27,7 +28,10 @@ class CURLFilePostHandler implements CURLHandler
 	}
 
 	/**
-	 * @param resource $curlHandle
+	 * Execute pre curl_exec
+	 *
+	 * @param resource $curlHandle the curl handle being executed
+	 * @return void
 	 */
 	public function preCurl($curlHandle)
 	{
@@ -41,8 +45,11 @@ class CURLFilePostHandler implements CURLHandler
 	}
 
 	/**
-	 * @param resourec $curlHandle
-	 * @param string   $response
+	 * Execut post curl_exec
+	 *
+	 * @param resourec $curlHandle the curl handle being executed
+	 * @param string   $response   the response from curl_exec
+	 * @return void
 	 */
 	public function postCurl($curlHandle, $response)
 	{

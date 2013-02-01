@@ -121,6 +121,7 @@ class TaxonomyData
 	 * Get all taxonomy information available to the currrent user
 	 *
 	 * @param boolean $usingAdmin if true, will use the admin account to retrive taxonomies
+	 * @param boolean $useCache   if true will attempt to use cached taxonomies
 	 * @return array
 	 */
 	public function getAvailableTaxonomies($usingAdmin = FALSE, $useCache = TRUE)

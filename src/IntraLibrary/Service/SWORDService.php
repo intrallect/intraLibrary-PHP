@@ -10,7 +10,8 @@ use \IntraLibrary\Configuration;
 /**
  * A simple wrapper for swordapp-php-library
  *
- * @author janek
+ * @package IntraLibrary_PHP
+ * @author  Janek Lasocki-Biczysko, <j.lasocki-biczysko@intrallect.com>
  */
 class SWORDService
 {
@@ -19,6 +20,12 @@ class SWORDService
 	 */
 	private $client;
 
+	/**
+	 * Create a new SWORDService object
+	 *
+	 * @param string $username the username
+	 * @param string $password the password
+	 */
 	public function __construct($username, $password)
 	{
 		Loader::loadSWORDAPP_PHP_CLIENT();
@@ -60,8 +67,10 @@ class SWORDService
 	/**
 	 * Deposit a file to a URL
 	 *
-	 * @param string $url      The deposit URL
-	 * @param string $filename The file to deposit
+	 * @param string  $url       The deposit URL
+	 * @param string  $filename  The file to deposit
+	 * @param boolean $MD5_check Whether to perform an MD5 check
+	 * @return void
 	 */
 	public function deposit($url, $filename, $MD5_check = FALSE)
 	{

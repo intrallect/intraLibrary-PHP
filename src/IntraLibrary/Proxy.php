@@ -124,7 +124,7 @@ abstract class Proxy
 	 * Configure all proxy clients to throw exceptions
 	 * when invoking undefined callbacks
 	 *
-	 * @param boolean $doThrow
+	 * @param boolean $doThrow Set to true if exceptions should be throw
 	 * @return void
 	 */
 	public static function setThrowExceptionOnMissingCallback($doThrow)

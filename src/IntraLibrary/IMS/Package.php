@@ -7,6 +7,8 @@ use \IntraLibrary\Debug;
 
 /**
  * IntraLibrary IMS Content Package class
+ *
+ * @package IntraLibrary_PHP
  */
 class Package
 {
@@ -20,7 +22,7 @@ class Package
 	/**
 	 * Createa a content package based on a manifest
 	 *
-	 * @param Manifest $manifest
+	 * @param Manifest $manifest the manifest
 	 */
 	public function __construct(Manifest $manifest)
 	{
@@ -30,7 +32,8 @@ class Package
 	/**
 	 * Set a file that's to be included in this content package
 	 *
-	 * @param string $filepath
+	 * @param string $filepath the filepath
+	 * @return void
 	 */
 	public function setFile($filepath)
 	{

@@ -18,6 +18,7 @@ interface CURLHandler
 	 * Will fire before a curl request is executed
 	 *
 	 * @param resource $curlHandle the curl handle
+	 * @return void
 	 */
 	public function preCurl($curlHandle);
 
@@ -26,6 +27,7 @@ interface CURLHandler
 	 *
 	 * @param resource $curlHandle the curl handle
 	 * @param string   $response   the response
+	 * @return void
 	 */
 	public function postCurl($curlHandle, $response);
 }

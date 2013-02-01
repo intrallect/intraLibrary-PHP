@@ -95,10 +95,9 @@ class Loader
 	{
 		if ($file = $this->_findFile($class))
 		{
-            include $file;
-
-            return TRUE;
-        }
+			include $file;
+			return TRUE;
+		}
 	}
 
 	/**

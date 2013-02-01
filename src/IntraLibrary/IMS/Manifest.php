@@ -4,6 +4,8 @@ namespace IntraLibrary\IMS;
 
 /**
  * IMS Manifest builder
+ *
+ * @package IntraLibrary_PHP
  */
 class Manifest
 {
@@ -11,6 +13,11 @@ class Manifest
 	private $variables;
 	private $charset;
 
+	/**
+	 * Create a Manfiest object
+	 *
+	 * @param string $charset the charset to use
+	 */
 	public function __construct($charset = 'UTF-8')
 	{
 		$this->charset = $charset;
@@ -23,8 +30,9 @@ class Manifest
 	/**
 	 * Set a template variable
 	 *
-	 * @param unknown_type $variable
-	 * @param unknown_type $value
+	 * @param string $variable the variable name
+	 * @param mixed  $value    the value
+	 * @return void
 	 */
 	private function _set($variable, $value)
 	{
@@ -34,8 +42,9 @@ class Manifest
 	/**
 	 * Magic function to intercept 'set*' & 'get*' function calls
 	 *
-	 * @param string $name
-	 * @param array  $arguments
+	 * @param string $name      the name of the function
+	 * @param array  $arguments the function arguments
+	 * @return mixed
 	 */
 	public function __call($name, $arguments = array())
 	{
@@ -60,8 +69,9 @@ class Manifest
 	/**
 	 * Sanitise data for XML
 	 *
-	 * @param mixed $data
+	 * @param mixed $data the data to sanitize
 	 * @throws Exception if sanitisation failed
+	 * @return string the clean data
 	 */
 	private function _sanitiseForXML($data)
 	{
@@ -87,7 +97,7 @@ class Manifest
 			}
 
 			// convert named to numeric, for XML support
-			$clean 		= EncodingUtils::html_convert_entities($clean);
+			$clean 		= EncodingUtils::htmlConvertEntities($clean);
 		}
 
 		return $clean;
@@ -96,8 +106,8 @@ class Manifest
 	/**
 	 * Add a taxonomy classification
 	 *
-	 * @param string $refId
-	 * @param string $name
+	 * @param string $source the source of the classification
+	 * @param array  $taxons thte taxons for this classification
 	 * @return void
 	 */
 	public function addClassification($source, $taxons)
@@ -111,7 +121,7 @@ class Manifest
 	/**
 	 * Add a description
 	 *
-	 * @param string $description
+	 * @param string $description the description
 	 * @return void
 	 */
 	public function addDescription($description)
@@ -122,7 +132,8 @@ class Manifest
 	/**
 	 * Save the ims manifest
 	 *
-	 * @param string $filepath
+	 * @param string $filepath the filepath to save to
+	 * @return integer|FALSE the number of bytes written, or FALSE if failed
 	 */
 	public function save($filepath)
 	{

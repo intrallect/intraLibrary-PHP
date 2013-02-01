@@ -19,6 +19,7 @@ class Request
 	 *
 	 * @param string $url the url to validate
 	 * @throws IntraLibraryException
+	 * @return string the url if it's valid
 	 */
 	public static function validateUrl($url)
 	{
@@ -66,7 +67,8 @@ class Request
 	/**
 	 * Set the curl handler for this request
 	 *
-	 * @param CURLHandler $curlHandler
+	 * @param CURLHandler $curlHandler the curl handler
+	 * @return void
 	 */
 	public function setCurlHandler(CURLHandler $curlHandler)
 	{
@@ -76,7 +78,8 @@ class Request
 	/**
 	 * Set the hostname for this request
 	 *
-	 * @param string $hostname
+	 * @param string $hostname the hostname
+	 * @return void
 	 */
 	public function setHostname($hostname)
 	{
@@ -181,7 +184,7 @@ class Request
 		$this->curlHandle = curl_init();
 
 		$cookiePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'intralibrary-admin.cookie';
-		if (!$this->_is_writable($cookiePath))
+		if (!$this->_isWritable($cookiePath))
 		{
 			throw new IntraLibraryException("Unable to write to IntraLibrary admin cookie $cookiePath");
 		}
@@ -275,10 +278,10 @@ class Request
 	/**
 	 * Determines whether a filepath is writable
 	 *
-	 * @param string $filename
+	 * @param string $filename the filename
 	 * @return boolean
 	 */
-	private function _is_writable($filename)
+	private function _isWritable($filename)
 	{
 		if (file_exists($filename))
 		{

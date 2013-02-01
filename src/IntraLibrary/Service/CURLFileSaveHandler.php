@@ -16,8 +16,9 @@ class CURLFileSaveHandler implements CURLHandler
 	private $file;
 
 	/**
+	 * Create a CURLFileSaveHandler object
 	 *
-	 * @param string $savepath
+	 * @param string $savepath the path to save the response to
 	 */
 	public function __construct($savepath)
 	{
@@ -35,7 +36,10 @@ class CURLFileSaveHandler implements CURLHandler
 	}
 
 	/**
-	 * @param resource $curlHandle
+	 * Execute pre curl_exec
+	 *
+	 * @param resource $curlHandle the curl handle being executed
+	 * @return void
 	 */
 	public function preCurl($curlHandle)
 	{
@@ -51,8 +55,11 @@ class CURLFileSaveHandler implements CURLHandler
 	}
 
 	/**
-	 * @param resourec $curlHandle
-	 * @param string   $response
+	 * Execute post curl_exec
+	 *
+	 * @param resourec $curlHandle the curl handle that was executed
+	 * @param string   $response   the response from curl_exec
+	 * @return void
 	 */
 	public function postCurl($curlHandle, $response)
 	{
