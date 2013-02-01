@@ -297,11 +297,13 @@ class Request
 	/**
 	 * Consumer a header entry
 	 *
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+	 *
 	 * @param resource $curlHandle the curl handle
 	 * @param string   $header     the header being processed
-	 * @return void
+	 * @return integer
 	 */
-	private function _consumeHeader($curlHandle, $header, $a = null, $b = null)
+	private function _consumeHeader($curlHandle, $header)
 	{
 		$this->headers[] = $header;
 		return strlen($header);

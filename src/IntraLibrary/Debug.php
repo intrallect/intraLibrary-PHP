@@ -14,6 +14,8 @@ class Debug extends Proxy
 	/**
 	 * Send a message to the screen
 	 *
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+	 *
 	 * @param string $message the message
 	 * @return mixed
 	 */
@@ -24,6 +26,8 @@ class Debug extends Proxy
 
 	/**
 	 * Send a message to the log
+	 *
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
 	 *
 	 * @param string $message the message
 	 * @return mixed

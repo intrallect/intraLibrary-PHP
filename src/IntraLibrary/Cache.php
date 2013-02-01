@@ -14,6 +14,8 @@ class Cache extends Proxy
 	/**
 	 * Load from the cache
 	 *
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+	 *
 	 * @param string $key the key to load
 	 * @return mixed
 	 */
@@ -24,6 +26,8 @@ class Cache extends Proxy
 
 	/**
 	 * Save to the cache
+	 *
+	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
 	 *
 	 * @param string  $key     the key
 	 * @param mixed   $data    the data
