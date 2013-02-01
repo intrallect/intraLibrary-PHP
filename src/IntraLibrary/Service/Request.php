@@ -301,6 +301,7 @@ class Request
 	 * Consumer a header entry
 	 *
 	 * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+	 * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
 	 *
 	 * @param resource $curlHandle the curl handle
 	 * @param string   $header     the header being processed
