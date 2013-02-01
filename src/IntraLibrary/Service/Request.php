@@ -35,6 +35,7 @@ class Request
 		return $url;
 	}
 
+	private $headers;
 	private $curlHandle;
 	private $curlHandler;
 	private $apiEndpoint;
@@ -111,7 +112,7 @@ class Request
 		curl_setopt($this->curlHandle, CURLOPT_HEADER, FALSE);
 		curl_setopt($this->curlHandle, CURLINFO_HEADER_OUT, TRUE);
 		curl_setopt($this->curlHandle, CURLOPT_VERBOSE, 1);
-		curl_setopt($this->curlHandle, CURLOPT_HEADER, 1);
+		curl_setopt($this->curlHandle, CURLOPT_HEADERFUNCTION, array($this, '_consumeHeader'));
 
 		if ($this->username && $this->password)
 		{
@@ -125,15 +126,12 @@ class Request
 		}
 
 		// execute
+		$this->headers = array();
 		$responseData = curl_exec($this->curlHandle);
-
-		$headerSize = curl_getinfo($this->curlHandle, CURLINFO_HEADER_SIZE);
-		$header = substr($responseData, 0, $headerSize);
-		$responseData = substr($responseData, $headerSize);
 
 		// and log this request
 		Debug::log(curl_getinfo($this->curlHandle, CURLINFO_HEADER_OUT));
-		Debug::log("Response Headers: $header");
+		Debug::log("Response Headers:\n" . implode("", $this->headers));
 
 		if ($this->curlHandler)
 		{
@@ -294,5 +292,18 @@ class Request
 		}
 
 		return FALSE;
+	}
+
+	/**
+	 * Consumer a header entry
+	 *
+	 * @param resource $curlHandle the curl handle
+	 * @param string   $header     the header being processed
+	 * @return void
+	 */
+	private function _consumeHeader($curlHandle, $header, $a = null, $b = null)
+	{
+		$this->headers[] = $header;
+		return strlen($header);
 	}
 }
