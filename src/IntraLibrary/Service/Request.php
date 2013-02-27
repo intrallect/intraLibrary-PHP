@@ -128,12 +128,12 @@ class Request
 			$this->curlHandler->preCurl($this->curlHandle);
 		}
 
-		// execute
+		// reset response headers and execute
 		$this->headers = array();
 		$responseData = curl_exec($this->curlHandle);
 
 		// and log this request
-		Debug::log(curl_getinfo($this->curlHandle, CURLINFO_HEADER_OUT));
+		Debug::log("Request Headers:\n" . curl_getinfo($this->curlHandle, CURLINFO_HEADER_OUT));
 		Debug::log("Response Headers:\n" . implode("", $this->headers));
 
 		if ($this->curlHandler)
