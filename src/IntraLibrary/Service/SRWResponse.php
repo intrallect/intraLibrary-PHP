@@ -96,7 +96,7 @@ class SRWResponse extends XMLResponse
 			$record['lastModified'] = $this->getText('.//record:record/record:lastModified', $recordElement);
 			$record['created'] = $this->getText('.//record:record/record:created', $recordElement);
 
-			$this->records[] = new \IntraLibrary\LibraryObject\Object($record);
+			$this->records[] = new \IntraLibrary\LibraryObject\Record($record);
 		}
 	}
 
