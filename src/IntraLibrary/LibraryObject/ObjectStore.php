@@ -103,7 +103,7 @@ class ObjectStore
 	 * Get an IntraLibrary object by it's catalog entry
 	 *
 	 * @param string $catalogEntry the catalog entry
-	 * @return \IntraLibrary\LibraryObject\Object[]
+	 * @return \IntraLibrary\LibraryObject\Record
 	 */
 	public function getObjectByCatalogEntry($catalogEntry)
 	{
@@ -125,8 +125,8 @@ class ObjectStore
 
 		$xsReq->query(array('query' => 'lom.general_catalogentry_entry=' . $catalogEntry));
 
-		$data  = $xsResp->getRecords();
-		$data  = isset($data[0]) ? $data[0] : NULL;
+		$data = $xsResp->getRecords();
+		$data = isset($data[0]) ? $data[0] : NULL;
 
 		Cache::save($key, $data);
 
