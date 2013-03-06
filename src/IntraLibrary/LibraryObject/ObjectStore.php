@@ -152,6 +152,12 @@ class ObjectStore
 		$data = $req->adminGet('Group')->getData();
 		$groups = array();
 
+		// if there's only one group, need to wrap it in an array
+		if (isset($data['list']['group']['id']))
+		{
+			$data['list']['group'] = array($data['list']['group']);
+		}
+
 		foreach ($data['list']['group'] as $group)
 		{
 			$groups[$group['id']] = $group;
