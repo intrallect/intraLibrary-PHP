@@ -3,6 +3,7 @@
 namespace IntraLibrary\LibraryObject;
 
 use \IntraLibrary\IntraLibraryException;
+use IntraLibrary\Configuration;
 
 /**
  * A Record representing an intraLibrary resource, created by an XSearch request
@@ -128,5 +129,22 @@ class Record
 		}
 
 		return $classifications;
+	}
+
+	/**
+	 * Get the intraLibrary resource page url
+	 *
+	 * @return string
+	 */
+	public function getUrl()
+	{
+		$packageId 	= $this->getId();
+		$hostname 	= parse_url(Configuration::get('hostname'), PHP_URL_HOST);
+		if (!$hostname)
+		{
+			throw new IntraLibraryException("Unable to generate record Url because intraLibrary hostname is not configured");
+		}
+
+		return "http://$hostname/IntraLibrary?command=work-area&resourcehome=$packageId";
 	}
 }
