@@ -31,7 +31,7 @@ class TaxonomyData
 	 */
 	private static function _runtimeCached($key)
 	{
-		return isset(self::$runtimeCache[$key]) ? self::$runtimeCache[$key] : NULL;
+		return isset(self::$runtimeCache[$key]) ? self::$runtimeCache[$key] : FALSE;
 	}
 
 	private $retrieveState;
@@ -94,13 +94,13 @@ class TaxonomyData
 		// Check all caches
 		$cacheKey 	= $this->_getRetrieveStateCacheKey();
 		$cached 	= Cache::load($cacheKey);
-		if ($cached instanceof TaxonomyObject)
+		if ($cached !== FALSE)
 		{
 			return $cached;
 		}
 
 		$cached 	= self::_runtimeCached($cacheKey);
-		if ($cached instanceof TaxonomyObject)
+		if ($cached !== FALSE)
 		{
 			return $cached;
 		}
@@ -111,7 +111,16 @@ class TaxonomyData
 			$this->getAvailableTaxonomies(FALSE, FALSE);
 
 			// and check the caches again
-			return $this->_retrieve(FALSE);
+			$object = $this->_retrieve(FALSE);
+
+			// save NULL cache entries so it doesn't get hit again
+			if (!$object)
+			{
+				Cache::save($cacheKey, NULL);
+				self::$runtimeCache[$cacheKey] = NULL;
+			}
+
+			return $object;
 		}
 
 		return NULL;
@@ -217,9 +226,9 @@ class TaxonomyData
 	 * @param TaxonomyObject $object the taxonomy object
 	 * @return string
 	 */
-	public function getSource(TaxonomyObject $object)
+	public function getSource($object)
 	{
-		if (!$object)
+		if (!$object instanceof TaxonomyObject)
 		{
 			return NULL;
 		}
