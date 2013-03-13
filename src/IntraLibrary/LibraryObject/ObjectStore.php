@@ -82,17 +82,12 @@ class ObjectStore
 		// generate query conditions
 		$conditions	= array();
 		array_walk($params, function($value, $key) use ($paramMap, &$conditions) {
-			$conditions[] = (isset($paramMap[$key]) ? $paramMap[$key] : $key) . '=' . $value;
+			$conditions[] = (isset($paramMap[$key]) ? $paramMap[$key] : $key) . '="' . $value . '"';
 		});
 
 		$xsReq->query(array('query' => implode(' AND ', $conditions), 'limit' => $limit));
 
-		$data   = $xsResp->getRecords();
-
-		// Sort objects by title
-		usort($data, function($objectA, $objectB) {
-			return strnatcmp($objectA->get('title'), $objectB->get('title'));
-		});
+		$data = $xsResp->getRecords();
 
 		Cache::save($key, $data);
 
@@ -112,25 +107,9 @@ class ObjectStore
 			return NULL;
 		}
 
-		$key = 'object//catalogEntry:' . $catalogEntry;
+		$data = $this->getObjects(array('catalog' => $catalogEntry));
 
-		$object = Cache::load($key);
-		if ($object !== FALSE)
-		{
-			return $object;
-		}
-
-		$xsResp = new SRWResponse('lom');
-		$xsReq  = new XSearchRequest($xsResp);
-
-		$xsReq->query(array('query' => 'lom.general_catalogentry_entry=' . $catalogEntry));
-
-		$data = $xsResp->getRecords();
-		$data = isset($data[0]) ? $data[0] : NULL;
-
-		Cache::save($key, $data);
-
-		return $data;
+		return isset($data[0]) ? $data[0] : NULL;
 	}
 
 	/**
