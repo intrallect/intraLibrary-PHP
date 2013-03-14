@@ -36,7 +36,6 @@
 		<exec executable="phpcs" escape="false">
 			<arg value="--standard=resources/CodeSniffer/Standards/Elgg" />
 			<arg value="--report=checkstyle" />
-			<arg value="--ignore=vendors/IntraLibrary-PHP/sword/swordapp-php-library,vendors/SCORMCloud_PHPLibrary" />
 			<arg value="${srcdir}" />
 			<arg value=">" />
 			<arg value="${logdir}/checkstyle.xml" />
@@ -51,8 +50,6 @@
 			<arg value="${srcdir}" />
 			<arg value="xml" />
 			<arg value="codesize,design,naming,unusedcode" />
-			<arg value="--exclude" />
-			<arg value="vendors/SCORMCloud_PHPLibrary/,vendors/IntraLibrary-PHP/sword/swordapp-php-library" />
 			<arg value=">" />
 			<arg value="${logdir}/pmd.xml" />
 		</exec>
