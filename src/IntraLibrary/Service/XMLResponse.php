@@ -48,7 +48,12 @@ abstract class XMLResponse
 	 */
 	public function xQuery($expression, DOMNode $contextNode = NULL)
 	{
-		return $this->xPath->query($expression, $contextNode);
+		if ($this->xPath)
+		{
+			return $this->xPath->query($expression, $contextNode);
+		}
+
+		return new \DOMNodeList();
 	}
 
 	/**
@@ -63,13 +68,22 @@ abstract class XMLResponse
 	 */
 	public function getText($expression, DOMNode $contextNode = NULL, $wrap = FALSE)
 	{
+		if (!$this->xPath)
+		{
+			return NULL;
+		}
+
 		// XXX: PHP 5.3.2 seems to require $contextNode to be omitted
 		// from the function's arguments if it is NULL
 		// 5.3.6 seems to handle this naturally...
 		if ($contextNode === NULL)
+		{
 			$domNodeList = $this->xPath->query($expression . '/text()');
+		}
 		else
+		{
 			$domNodeList = $this->xPath->query($expression . '/text()', $contextNode);
+		}
 
 
 		if ($domNodeList && $domNodeList->length > 0)
