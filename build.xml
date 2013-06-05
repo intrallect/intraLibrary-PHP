@@ -34,11 +34,18 @@
 	<target name="phpcs">
 		<echo msg="PHP CodeSniffer..." />
 		<exec executable="phpcs" escape="false">
-			<arg value="--standard=resources/CodeSniffer/Standards/Elgg" />
+			<arg value="--standard=PSR2" />
 			<arg value="--report=checkstyle" />
 			<arg value="${srcdir}" />
 			<arg value=">" />
 			<arg value="${logdir}/checkstyle.xml" />
+		</exec>
+	</target>
+	<target name="phpcs-out">
+		<echo msg="PHP CodeSniffer..." />
+		<exec executable="phpcs" escape="false" logoutput="true">
+			<arg value="--standard=PSR2" />
+			<arg value="${srcdir}" />
 		</exec>
 	</target>
 
@@ -52,6 +59,15 @@
 			<arg value="codesize,design,naming,unusedcode" />
 			<arg value=">" />
 			<arg value="${logdir}/pmd.xml" />
+		</exec>
+	</target>
+	<target name="phpmd-out">
+		<echo msg="PHPMD..." />
+
+		<exec executable="phpmd" escape="false">
+			<arg value="${srcdir}" />
+			<arg value="text" />
+			<arg value="codesize,design,naming,unusedcode" />
 		</exec>
 	</target>
 

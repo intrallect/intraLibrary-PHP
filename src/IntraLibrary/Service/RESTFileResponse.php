@@ -11,18 +11,19 @@ namespace IntraLibrary\Service;
  */
 class RESTFileResponse extends RESTResponse
 {
-	/**
-	 * Load the response data
-	 *
-	 * @param mixed $responseData the response data
-	 * @return void
-	 */
-	public function load($responseData)
-	{
-		// successful file download responses via CURL
-		// will return a TRUE
-		if ($responseData !== TRUE) {
-			parent::load($responseData);
-		}
-	}
+    /**
+     * Load the response data
+     *
+     * @param mixed $responseData the response data
+     * @return void
+     */
+    public function load($responseData)
+    {
+        // successful file download responses via CURL
+        // will return true
+        if ($responseData !== true) {
+            parent::load($responseData);
+        }
+    }
 }
+

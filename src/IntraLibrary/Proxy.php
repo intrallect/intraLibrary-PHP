@@ -20,115 +20,106 @@ namespace IntraLibrary;
  */
 abstract class Proxy
 {
-	private static $_actions = array();
-	private static $_callbacks = array();
-	private static $_missingCallbackException = TRUE;
+    private static $actions = array();
+    private static $callbacks = array();
+    private static $missingCallbackException = true;
 
-	/**
-	* Register a proxy function
-	* Inspect the extending class to see which functions should be registered
-	*
-	* @param string   $action   the action to register
-	* @param callable $callback the callback to register with this action
-	* @throws IntraLibraryException
-	* @return void
-	*/
-	public static function register($action, $callback)
-	{
-		if (!in_array($action, self::_getActions()))
-		{
-			throw new IntraLibraryException($action . ' is not a valid action');
-		}
+    /**
+    * Register a proxy function
+    * Inspect the extending class to see which functions should be registered
+    *
+    * @param string   $action   the action to register
+    * @param callable $callback the callback to register with this action
+    * @throws IntraLibraryException
+    * @return void
+    */
+    public static function register($action, $callback)
+    {
+        if (!in_array($action, self::getActions())) {
+            throw new IntraLibraryException($action . ' is not a valid action');
+        }
 
-		if (!is_callable($callback))
-		{
-			throw new IntraLibraryException($callback . ' does not exist or is not callable');
-		}
+        if (!is_callable($callback)) {
+            throw new IntraLibraryException($callback . ' does not exist or is not callable');
+        }
 
-		if (isset(self::$_callbacks[$action]))
-		{
-			throw new IntraLibraryException($action . ' has already been registered');
-		}
+        if (isset(self::$callbacks[$action])) {
+            throw new IntraLibraryException($action . ' has already been registered');
+        }
 
-		self::$_callbacks[$action] = $callback;
-	}
+        self::$callbacks[$action] = $callback;
+    }
 
-	/**
-	 * Invoke a registered action
-	 *
-	 * @throws IntraLibraryException
-	 * @return mixed
-	 */
-	protected static function invoke()
-	{
-		$args = func_get_args();
+    /**
+     * Invoke a registered action
+     *
+     * @throws IntraLibraryException
+     * @return mixed
+     */
+    protected static function invoke()
+    {
+        $args = func_get_args();
 
-		if (count($args) < 1)
-		{
-			throw new IntraLibraryException('Not enough arguments');
-		}
+        if (count($args) < 1) {
+            throw new IntraLibraryException('Not enough arguments');
+        }
 
-		$name = $args[0];
+        $name = $args[0];
 
-		if (empty(self::$_callbacks[$name]))
-		{
-			if (self::$_missingCallbackException)
-			{
-				throw new IntraLibraryException("No proxy action defined for '$name'");
-			}
+        if (empty(self::$callbacks[$name])) {
+            if (self::$missingCallbackException) {
+                throw new IntraLibraryException("No proxy action defined for '$name'");
+            }
 
-			return FALSE;
-		}
+            return false;
+        }
 
-		$params = isset($args[1]) ? $args[1] : array();
+        $params = isset($args[1]) ? $args[1] : array();
 
-		return call_user_func_array(self::$_callbacks[$name], $params);
-	}
+        return call_user_func_array(self::$callbacks[$name], $params);
+    }
 
 
-	/**
-	 * Retrieve all actions defined by the extending class
-	 *
-	 * @return array
-	 */
-	private static function _getActions()
-	{
-		// get the called class
-		$calledClass		= get_called_class();
-		if (!$calledClass)
-		{
-			return array();
-		}
+    /**
+     * Retrieve all actions defined by the extending class
+     *
+     * @return array
+     */
+    private static function getActions()
+    {
+        // get the called class
+        $calledClass		= get_called_class();
+        if (!$calledClass) {
+            return array();
+        }
 
-		if (isset(self::$_actions[$calledClass]))
-		{
-			return self::$_actions[$calledClass];
-		}
+        if (isset(self::$actions[$calledClass])) {
+            return self::$actions[$calledClass];
+        }
 
-		self::$_actions[$calledClass] = array();
+        self::$actions[$calledClass] = array();
 
-		// reflect in and find all public static functions defined by that class
-		$reflectionClass 	= new \ReflectionClass($calledClass);
-		foreach ($reflectionClass->getMethods() as $method)
-		{
-			if ($method->isStatic() && $method->isPublic() && $method->class == $calledClass)
-			{
-				self::$_actions[$calledClass][] = $method->name;
-			}
-		}
+        // reflect in and find all public static functions defined by that class
+        $reflectionClass 	= new \ReflectionClass($calledClass);
+        foreach ($reflectionClass->getMethods() as $method) {
+            if ($method->isStatic() && $method->isPublic() && $method->class == $calledClass) {
+                self::$actions[$calledClass][] = $method->name;
+            }
+        }
 
-		return self::$_actions[$calledClass];
-	}
+        return self::$actions[$calledClass];
+    }
 
-	/**
-	 * Configure all proxy clients to throw exceptions
-	 * when invoking undefined callbacks
-	 *
-	 * @param boolean $doThrow Set to true if exceptions should be throw
-	 * @return void
-	 */
-	public static function setThrowExceptionOnMissingCallback($doThrow)
-	{
-		self::$_missingCallbackException = $doThrow;
-	}
+    /**
+     * Configure all proxy clients to throw exceptions
+     * when invoking undefined callbacks
+     *
+     * @param boolean $doThrow Set to true if exceptions should be throw
+     * @return void
+     */
+    public static function setThrowExceptionOnMissingCallback($doThrow)
+    {
+        self::$missingCallbackException = $doThrow;
+    }
 }
+

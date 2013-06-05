@@ -11,57 +11,53 @@ namespace IntraLibrary;
  */
 class Configuration
 {
-	private static $CONFIG;
+    private static $CONFIG;
 
-	/**
-	 * Set the value for a configuration setting or override all settings
-	 *
-	 * @param string $name  The setting name
-	 * @param mixed  $value (optional) The setting value
-	 * @return void
-	 */
-	public static function set($name, $value = NULL)
-	{
-		self::_init();
+    /**
+     * Set the value for a configuration setting or override all settings
+     *
+     * @param string $name  The setting name
+     * @param mixed  $value (optional) The setting value
+     * @return void
+     */
+    public static function set($name, $value = null)
+    {
+        self::init();
 
-		if ($value == NULL && (is_array($name) || is_object($name)))
-		{
-			self::$CONFIG = (object) $name;
-		}
-		else if (is_string($name))
-		{
-			self::$CONFIG->{$name} = $value;
-		}
-	}
+        if ($value == null && (is_array($name) || is_object($name))) {
+            self::$CONFIG = (object) $name;
+        } elseif (is_string($name)) {
+            self::$CONFIG->{$name} = $value;
+        }
+    }
 
-	/**
-	 * Get a the value for a configuration setting
-	 *
-	 * @param string $name The setting name
-	 * @return mixed
-	 */
-	public static function get($name = NULL)
-	{
-		self::_init();
+    /**
+     * Get a the value for a configuration setting
+     *
+     * @param string $name The setting name
+     * @return mixed
+     */
+    public static function get($name = null)
+    {
+        self::init();
 
-		if ($name === NULL)
-		{
-			return self::$CONFIG;
-		}
+        if ($name === null) {
+            return self::$CONFIG;
+        }
 
-		return empty(self::$CONFIG->$name) ? NULL : self::$CONFIG->$name;
-	}
+        return empty(self::$CONFIG->$name) ? null : self::$CONFIG->$name;
+    }
 
-	/**
-	 * Initalise the config object
-	 *
-	 * @return void
-	 */
-	private static function _init()
-	{
-		if (empty(self::$CONFIG))
-		{
-			self::$CONFIG = new \stdClass();
-		}
-	}
+    /**
+     * Initalise the config object
+     *
+     * @return void
+     */
+    private static function init()
+    {
+        if (empty(self::$CONFIG)) {
+            self::$CONFIG = new \stdClass();
+        }
+    }
 }
+

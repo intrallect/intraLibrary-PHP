@@ -14,20 +14,21 @@ use \IntraLibrary\IntraLibraryException;
 interface CURLHandler
 {
 
-	/**
-	 * Will fire before a curl request is executed
-	 *
-	 * @param resource $curlHandle the curl handle
-	 * @return void
-	 */
-	public function preCurl($curlHandle);
+    /**
+     * Will fire before a curl request is executed
+     *
+     * @param resource $curlHandle the curl handle
+     * @return void
+     */
+    public function preCurl($curlHandle);
 
-	/**
-	 * Will fire after a curl request is executed
-	 *
-	 * @param resource $curlHandle the curl handle
-	 * @param string   $response   the response
-	 * @return void
-	 */
-	public function postCurl($curlHandle, $response);
+    /**
+     * Will fire after a curl request is executed
+     *
+     * @param resource $curlHandle the curl handle
+     * @param string   $response   the response
+     * @return void
+     */
+    public function postCurl($curlHandle, $response);
 }
+
