@@ -24,6 +24,7 @@ class XSearchRequest extends AbstractSRURequest
         return 'IntraLibrary-XSearch';
     }
 
+    // @codingStandardsIgnoreStart
     /**
      * Set the XSearch user
      *
@@ -31,6 +32,7 @@ class XSearchRequest extends AbstractSRURequest
      * @return void
      */
     public function setXSearchUsername($username)
+    // @codingStandardsIgnoreEnd
     {
         $this->xsearchUsername = $username;
     }

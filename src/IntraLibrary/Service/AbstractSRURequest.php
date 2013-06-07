@@ -50,8 +50,7 @@ abstract class AbstractSRURequest extends Request
     public function query($params)
     {
         // query parameter is required
-        if (empty($params['query']))
-        {
+        if (empty($params['query'])) {
             throw new IntraLibraryException('Missing query parameter');
         }
 
@@ -62,18 +61,15 @@ abstract class AbstractSRURequest extends Request
             'query' => $params['query']
         );
 
-        if (!empty($params['limit']) && ((int) $params['limit']) != 0)
-        {
+        if (!empty($params['limit']) && ((int) $params['limit']) != 0) {
             $requestParams['maximumRecords'] = (int) $params['limit'];
         }
 
-        if (!empty($params['startRecord']) && ((int) $params['startRecord']) != 0)
-        {
+        if (!empty($params['startRecord']) && ((int) $params['startRecord']) != 0) {
             $requestParams['startRecord'] = (int) $params['startRecord'];
         }
 
-        if (!empty($params['showUnpublished']))
-        {
+        if (!empty($params['showUnpublished'])) {
             $requestParams['showUnpublished'] = 'true';
         }
 
@@ -93,10 +89,9 @@ abstract class AbstractSRURequest extends Request
     protected function prepareResponse($responseData)
     {
         $httpCode = $this->getLastResponseCode();
-        if ($httpCode < 200 || $httpCode > 399)
-        {
+        if ($httpCode < 200 || $httpCode > 399) {
             // non-OK http codes for XSearch requests don't return a normal XML response
-            $responseData = NULL;
+            $responseData = null;
         }
 
         $this->responseObject->load($responseData);
@@ -104,10 +99,10 @@ abstract class AbstractSRURequest extends Request
         $numRecords 	= count($this->responseObject->getRecords());
         $totalRecords 	= $this->responseObject->getTotalRecords();
 
-        if ($numRecords != $totalRecords)
-        {
+        if ($numRecords != $totalRecords) {
             $requestInfo = $this->getLastRequestInfo();
-            error_log("IntraLibrary-PHP: total records ($totalRecords) do not match response count ($numRecords) for $requestInfo");
+            $messageFormat = "IntraLibrary-PHP: total records (%s) do not match response count (%s) for %s";
+            error_log(sprintf($messageFormat, $totalRecords, $numRecords, $requestInfo));
         }
 
         return $this->responseObject;

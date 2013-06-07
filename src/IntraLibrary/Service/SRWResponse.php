@@ -3,6 +3,7 @@
 namespace IntraLibrary\Service;
 
 use \IntraLibrary\IntraLibraryException;
+use \Exception;
 
 /**
  * IntraLibrary SRW response class

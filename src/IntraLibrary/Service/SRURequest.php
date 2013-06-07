@@ -20,7 +20,8 @@ class SRURequest extends AbstractSRURequest
      *
      * @param SRWResponse $responseObject
      */
-    public function __construct(SRWResponse $responseObject) {
+    public function __construct(SRWResponse $responseObject)
+    {
         parent::__construct($responseObject);
         $this->setLogin(null, null);
     }
@@ -54,8 +55,7 @@ class SRURequest extends AbstractSRURequest
      */
     protected function updateRequestParams($requestParams)
     {
-        if ($this->token !== null)
-        {
+        if ($this->token !== null) {
             $requestParams[self::TOKEN_TAG] = $this->token;
         }
 
