@@ -44,9 +44,8 @@ class CollectionData
         $data = $response->getData();
 
         $collections = array();
-        foreach($data['list']['collection'] as $curcollection)
-        {
-            $collections[ $curcollection["_attributes"]["id"] ] = $curcollection["_attributes"]["name"];
+        foreach ($data['list']['collection'] as $col) {
+            $collections[ $col["_attributes"]["id"] ] = $col["_attributes"]["name"];
         }
 
         return $collections;
