@@ -30,9 +30,9 @@ class CollectionData
 
         if ($useCache) {
             // Check if it's cached..
-            $collectionIds = Cache::load($key);
-            if ($collectionIds !== false) {
-                return $collectionIds;
+            $collections = Cache::load($key);
+            if ($collections !== false) {
+                return $collections;
             }
         }
 
@@ -47,6 +47,8 @@ class CollectionData
         foreach ($data['list']['collection'] as $col) {
             $collections[ $col["_attributes"]["id"] ] = $col["_attributes"]["name"];
         }
+
+        Cache::save($key, $collections);
 
         return $collections;
     }
