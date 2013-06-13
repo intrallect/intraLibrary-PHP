@@ -34,14 +34,34 @@ class Request
         return $url;
     }
 
-    private $headers;
-    private $curlHandle;
+    /**
+     * Set a curl resource to use the admin cookie file
+     *
+     * @param resource $curlHandle the curl handle to configure with the admin cookie
+     * @throws IntraLibraryException
+     */
+    public static function useAdminCookie($curlHandle)
+    {
+        $cookiePath = Configuration::get('admin_cookie_path');
+        if (empty($cookiePath)) {
+            $cookiePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'intralibrary-admin.cookie';
+        }
+
+        if (!$this->isWritable($cookiePath)) {
+            throw new IntraLibraryException("Unable to write to IntraLibrary admin cookie $cookiePath");
+        }
+
+        curl_setopt($curlHandle, CURLOPT_COOKIEFILE, $cookiePath);
+        curl_setopt($curlHandle, CURLOPT_COOKIEJAR, $cookiePath);
+    }
+
     private $curlHandler;
     private $apiEndpoint;
     private $apiUrl;
     private $username;
     private $password;
     private $requestURL;
+    private $responseData;
     private $responseCode;
     private $responseType;
 
@@ -88,12 +108,14 @@ class Request
     /**
      * Perform an IntraLibrary request
      *
-     * @param string $method the request method
-     * @param array  $params the request method parameters
+     * @param string   $method     the request method
+     * @param array    $params     (optional) the request method parameters
+     * @param resource $curlHandle (optional) the curl handle to use
      * @return mixed
      */
-    public function get($method = '', array $params = array())
+    public function get($method = '', array $params = array(), $curlHandle = null)
     {
+        // prepare the request URL
         $this->requestURL = $this->apiUrl . $method;
         if ($params) {
             $queryString = http_build_query($params, null, '&');
@@ -102,60 +124,48 @@ class Request
             $this->requestURL .= '?' . $queryString;
         }
 
-        if ($this->curlHandle === null) {
-            $this->curlHandle = curl_init();
+        // initialise and configure the curl handle
+        if ($curlHandle === null) {
+            $curlHandle = curl_init();
+        }
+        $responseHeaders = array();
+        $this->configureCurlHandle($curlHandle, $responseHeaders);
+
+        // execute the curl handle
+        if ($this->curlHandler) {
+            $this->curlHandler->preCurl($curlHandle);
         }
 
-        curl_setopt($this->curlHandle, CURLOPT_URL, $this->requestURL);
-        curl_setopt($this->curlHandle, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($this->curlHandle, CURLOPT_HEADER, false);
-        curl_setopt($this->curlHandle, CURLINFO_HEADER_OUT, true);
-        curl_setopt($this->curlHandle, CURLOPT_VERBOSE, 1);
-        curl_setopt($this->curlHandle, CURLOPT_HEADERFUNCTION, array($this, 'consumeHeader'));
-
-        if ($this->username && $this->password) {
-            curl_setopt($this->curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-            curl_setopt($this->curlHandle, CURLOPT_USERPWD, "$this->username:$this->password");
-        }
+        $this->responseData = curl_exec($curlHandle);
+        $this->responseCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
+        $this->responseType = curl_getinfo($curlHandle, CURLINFO_CONTENT_TYPE);
 
         if ($this->curlHandler) {
-            $this->curlHandler->preCurl($this->curlHandle);
-        }
-
-        // reset response headers and execute
-        $this->headers = array();
-        $responseData = curl_exec($this->curlHandle);
-
-        if ($this->curlHandler) {
-            $this->curlHandler->postCurl($this->curlHandle, $responseData);
+            $this->curlHandler->postCurl($curlHandle, $this->responseData);
         }
 
         // check if any errors have occured
-        $error = curl_errno($this->curlHandle);
+        $error = curl_errno($curlHandle);
         if ($error) {
-            $errorMsg = curl_error($this->curlHandle);
+            $errorMsg = curl_error($curlHandle);
             Debug::log("cURL error while requesting $this->requestURL: $errorMsg ($error)");
         } else {
             // otherwise log this request
-            Debug::log("Request Headers:\n" . curl_getinfo($this->curlHandle, CURLINFO_HEADER_OUT));
-            Debug::log("Response Headers:\n" . implode("", $this->headers));
-
-            $this->responseCode = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
-            $this->responseType = curl_getinfo($this->curlHandle, CURLINFO_CONTENT_TYPE);
+            Debug::log("Request Headers:\n" . curl_getinfo($curlHandle, CURLINFO_HEADER_OUT));
+            Debug::log("Response Headers:\n" . implode("", $responseHeaders));
         }
 
-        // reset the curl handler
-        curl_close($this->curlHandle);
-        $this->curlHandle = null;
+        curl_close($curlHandle);
 
         if ($this->responseCode < 200 || $this->responseCode > 399) {
+            $responseSnippet = htmlentities(substr($this->responseData, 0, 1000));
             $message  = "IntraLibrary request to <pre style='font-weight: normal;'>{$this->requestURL}</pre>";
             $message .= " by user {$this->username} received status code {$this->responseCode}";
-            $message .= "<pre style='font-weight:normal;'>" . htmlentities(substr($responseData, 0, 1000)) . "</pre>";
+            $message .= "<pre style='font-weight:normal;'>$responseSnippet</pre>";
             Debug::screen($message);
         }
 
-        return $this->prepareResponse($responseData);
+        return $this->prepareResponse($this->responseData);
     }
 
     /**
@@ -178,19 +188,15 @@ class Request
             throw new IntraLibraryException('IntraLibrary is not configured with admin login credentials');
         }
 
+        $curlHandle = curl_init();
+
+        // setup admin login credentials
         $this->setLogin($ilConfig->admin_username, $ilConfig->admin_password);
 
-        $this->curlHandle = curl_init();
+        // configure the admin cookie
+        self::useAdminCookie($curlHandle);
 
-        $cookiePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'intralibrary-admin.cookie';
-        if (!$this->isWritable($cookiePath)) {
-            throw new IntraLibraryException("Unable to write to IntraLibrary admin cookie $cookiePath");
-        }
-
-        curl_setopt($this->curlHandle, CURLOPT_COOKIEFILE, $cookiePath);
-        curl_setopt($this->curlHandle, CURLOPT_COOKIEJAR, $cookiePath);
-
-        $response = $this->get($method, $params);
+        $response = $this->get($method, $params, $curlHandle);
 
         // restore original settings
         $this->setLogin($username, $password);
@@ -274,6 +280,16 @@ class Request
     }
 
     /**
+     * Get the response data of the last request
+     *
+     * @return string
+     */
+    public function getLastResponseData()
+    {
+        return $this->responseData;
+    }
+
+    /**
      * Determines whether a filepath is writable
      *
      * @param string $filename the filename
@@ -294,19 +310,32 @@ class Request
     }
 
     /**
-     * Consumer a header entry
+     * Configure a curl handle
      *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
-     *
-     * @param resource $curlHandle the curl handle
-     * @param string   $header     the header being processed
-     * @return integer
+     * @param resource $curlHandle      the curl handle
+     * @param array    $responseHeaders the response headers
      */
-    private function consumeHeader($curlHandle, $header)
+    private function configureCurlHandle($curlHandle, &$responseHeaders)
     {
-        $this->headers[] = $header;
-        return strlen($header);
+        curl_setopt($curlHandle, CURLOPT_URL, $this->requestURL);
+        curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curlHandle, CURLOPT_HEADER, false);
+        curl_setopt($curlHandle, CURLINFO_HEADER_OUT, true);
+        curl_setopt(
+            $curlHandle,
+            CURLOPT_HEADERFUNCTION,
+            // @codingStandardsIgnoreStart
+            function ($curlHandle, $header) use (&$responseHeaders) {
+                $responseHeaders[] = $header;
+                return strlen($header);
+            }
+            // @codingStandardsIgnoreEnd
+        );
+
+        if ($this->username && $this->password) {
+            curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+            curl_setopt($curlHandle, CURLOPT_USERPWD, "$this->username:$this->password");
+        }
     }
 }
 
