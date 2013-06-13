@@ -91,10 +91,10 @@ abstract class AbstractSRURequest extends Request
         $httpCode = $this->getLastResponseCode();
         if ($httpCode < 200 || $httpCode > 399) {
             // non-OK http codes for XSearch requests don't return a normal XML response
-            $responseData = null;
+            $this->responseObject->setInternalError($responseData);
+        } else {
+            $this->responseObject->load($responseData);
         }
-
-        $this->responseObject->load($responseData);
 
         $numRecords 	= count($this->responseObject->getRecords());
         $totalRecords 	= $this->responseObject->getTotalRecords();

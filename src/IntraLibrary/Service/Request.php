@@ -126,20 +126,27 @@ class Request
         $this->headers = array();
         $responseData = curl_exec($this->curlHandle);
 
-        // and log this request
-        Debug::log("Request Headers:\n" . curl_getinfo($this->curlHandle, CURLINFO_HEADER_OUT));
-        Debug::log("Response Headers:\n" . implode("", $this->headers));
-
         if ($this->curlHandler) {
             $this->curlHandler->postCurl($this->curlHandle, $responseData);
         }
 
-        $this->responseCode = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
-        $this->responseType = curl_getinfo($this->curlHandle, CURLINFO_CONTENT_TYPE);
+        // check if any errors have occured
+        $error = curl_errno($this->curlHandle);
+        if ($error) {
+            $errorMsg = curl_error($this->curlHandle);
+            Debug::log("cURL error while requesting $this->requestURL: $errorMsg ($error)");
+        } else {
+            // otherwise log this request
+            Debug::log("Request Headers:\n" . curl_getinfo($this->curlHandle, CURLINFO_HEADER_OUT));
+            Debug::log("Response Headers:\n" . implode("", $this->headers));
+
+            $this->responseCode = curl_getinfo($this->curlHandle, CURLINFO_HTTP_CODE);
+            $this->responseType = curl_getinfo($this->curlHandle, CURLINFO_CONTENT_TYPE);
+        }
 
         // reset the curl handler
         curl_close($this->curlHandle);
-        $this->curlHandle 	= null;
+        $this->curlHandle = null;
 
         if ($this->responseCode < 200 || $this->responseCode > 399) {
             $message  = "IntraLibrary request to <pre style='font-weight: normal;'>{$this->requestURL}</pre>";

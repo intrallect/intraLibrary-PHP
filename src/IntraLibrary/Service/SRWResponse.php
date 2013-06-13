@@ -31,6 +31,7 @@ class SRWResponse extends XMLResponse
     private $recordSchema;
     private $records = array();
     private $totalRecords = 0;
+    private $internalError;
 
     /**
      * Create an IntraLibrary SRW Response object
@@ -158,12 +159,27 @@ class SRWResponse extends XMLResponse
     }
 
     /**
+     * Set an internal error
+     *
+     * @param mixed $error the error to set
+     * @return void
+     */
+    public function setInternalError($error)
+    {
+        $this->internalError = $error;
+    }
+
+    /**
      * Get error data for this response
      *
      * @return null|string
      */
     public function getError()
     {
+        if ($this->internalError) {
+            return $this->internalError;
+        }
+
         $error = $this->getDiagnosticsMessage();
         if (!$error) {
             return null;
