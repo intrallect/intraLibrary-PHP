@@ -13,6 +13,7 @@ use \IntraLibrary\IntraLibraryException;
 class XSearchRequest extends AbstractSRURequest
 {
     private $xsearchUsername;
+    private $showUnpublished;
 
     /**
      * Get the API endpoint for the request
@@ -38,6 +39,17 @@ class XSearchRequest extends AbstractSRURequest
     }
 
     /**
+     * Enable/disable unpublished resources
+     *
+     * @param boolean $enabled Whether to display unpublished resources
+     * @return void
+     */
+    public function setShowUnpublished($enabled)
+    {
+        $this->showUnpublished = (boolean) $enabled;
+    }
+
+    /**
      * Update the request parameters
      *
      * @param array $requestParams The request parameres.
@@ -46,6 +58,10 @@ class XSearchRequest extends AbstractSRURequest
     protected function updateRequestParams($requestParams)
     {
         $requestParams['username'] = empty($this->xsearchUsername) ? $this->getUsername() : $this->xsearchUsername;
+
+        if ($this->showUnpublished) {
+            $requestParams['showUnpublished'] = true;
+        }
 
         return $requestParams;
     }
