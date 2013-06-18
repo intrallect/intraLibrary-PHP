@@ -42,9 +42,15 @@ class CollectionData
 
         // Response contains usable data
         $data = $response->getData();
+        $data = $data['list']['collection'];
 
         $collections = array();
-        foreach ($data['list']['collection'] as $col) {
+
+        if (isset($data['_attributes'])) {
+            $data = array($data);
+        }
+
+        foreach ($data as $col) {
             $collections[ $col["_attributes"]["id"] ] = $col["_attributes"]["name"];
         }
 
