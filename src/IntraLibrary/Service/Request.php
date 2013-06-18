@@ -47,12 +47,32 @@ class Request
             $cookiePath = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'intralibrary-admin.cookie';
         }
 
-        if (!$this->isWritable($cookiePath)) {
+        if (!self::isWritable($cookiePath)) {
             throw new IntraLibraryException("Unable to write to IntraLibrary admin cookie $cookiePath");
         }
 
         curl_setopt($curlHandle, CURLOPT_COOKIEFILE, $cookiePath);
         curl_setopt($curlHandle, CURLOPT_COOKIEJAR, $cookiePath);
+    }
+
+    /**
+     * Determines whether a filepath is writable
+     *
+     * @param string $filename the filename
+     * @return boolean
+     */
+    private static function isWritable($filename)
+    {
+        if (file_exists($filename)) {
+            return is_writable($filename);
+        }
+
+        $filename = dirname($filename);
+        if (is_dir($filename)) {
+            return is_writable($filename);
+        }
+
+        return false;
     }
 
     private $curlHandler;
@@ -289,25 +309,7 @@ class Request
         return $this->responseData;
     }
 
-    /**
-     * Determines whether a filepath is writable
-     *
-     * @param string $filename the filename
-     * @return boolean
-     */
-    private function isWritable($filename)
-    {
-        if (file_exists($filename)) {
-            return is_writable($filename);
-        }
 
-        $filename = dirname($filename);
-        if (is_dir($filename)) {
-            return is_writable($filename);
-        }
-
-        return false;
-    }
 
     /**
      * Configure a curl handle

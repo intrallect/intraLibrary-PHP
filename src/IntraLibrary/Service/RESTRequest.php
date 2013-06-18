@@ -40,11 +40,12 @@ class RESTRequest extends Request
      *
      * @see Request::get()
      *
-     * @param string $method the method to call
-     * @param array  $params the parameters that will be psased to this method (as HTTP GET parameters)
+     * @param string    $method    the method to call
+     * @param array    $params     the parameters that will be psased to this method (as HTTP GET parameters)
+     * @param resource $curlHandle (optional) the curl handle to use
      * @return RESTResponse
      */
-    public function get($method = '', array $params = array())
+    public function get($method = '', array $params = array(), $curlHandle = null)
     {
         // Faster to parse JSON than XML
         return parent::get($method, array_merge(array('output' => 'json'), $params));
