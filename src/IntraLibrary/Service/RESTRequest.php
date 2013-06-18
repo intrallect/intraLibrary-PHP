@@ -48,7 +48,7 @@ class RESTRequest extends Request
     public function get($method = '', array $params = array(), $curlHandle = null)
     {
         // Faster to parse JSON than XML
-        return parent::get($method, array_merge(array('output' => 'json'), $params));
+        return parent::get($method, array_merge(array('output' => 'json'), $params), $curlHandle);
     }
 
     /**
