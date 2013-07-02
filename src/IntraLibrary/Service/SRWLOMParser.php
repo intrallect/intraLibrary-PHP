@@ -46,7 +46,8 @@ class SRWLOMParser extends SRWParser
             'format'      => './/lom:technical/lom:format',
             'size'        => './/lom:technical/lom:size',
             'technical_location' => './/lom:technical/lom:location',
-            'type'        => './/lom:educational/lom:learningResourceType/lom:value'
+            'type'        => './/lom:educational/lom:learningResourceType/lom:value',
+            'author'      => './/lom:lifeCycle/lom:contribute/lom:entity'
         );
     }
 

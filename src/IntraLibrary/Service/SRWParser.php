@@ -23,7 +23,8 @@ abstract class SRWParser
             'type',
             'format',
             'size',
-            'technical_location'
+            'technical_location',
+            'author'
     );
 
     /**
