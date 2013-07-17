@@ -42,7 +42,13 @@ class RESTResponse
             }
         } else {
             $this->error = true;
-            throw new IntraLibraryException('RESTResponse responseData invalid');
+            $message = 'RESTResponse responseData invalid';
+
+            if ($error = json_last_error()) {
+                $message .= " (json decode error $error)";
+            }
+
+            throw new IntraLibraryException($message);
         }
     }
 
