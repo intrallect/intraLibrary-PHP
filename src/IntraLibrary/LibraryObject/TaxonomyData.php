@@ -35,6 +35,7 @@ class TaxonomyData
     }
 
     private $retrieveState;
+    private $built = false;
 
     /**
      * Retrieve an TaxonomyObject by its ref id and source taxonomy
@@ -89,10 +90,9 @@ class TaxonomyData
     /**
      * Internal retrieve TaxonomyObject logic
      *
-     * @param boolean $rebuild if False, will only search the caches
      * @return TaxonomyObject
      */
-    private function retrieve($rebuild = true)
+    private function retrieve()
     {
         // Check all caches
         $cacheKey 	= $this->getRetrieveStateCacheKey();
@@ -106,20 +106,14 @@ class TaxonomyData
             return $cached;
         }
 
-        if ($rebuild) {
+        if (!$this->built) {
+
             // trigger a rebuild of the caches
-            $this->getAvailableTaxonomies(false, false);
+            $this->getAvailableTaxonomies(true, false);
+            $this->built = true;
 
             // and check the caches again
-            $object = $this->retrieve(false);
-
-            // save null cache entries so it doesn't get hit again
-            if (!$object) {
-                Cache::save($cacheKey, null);
-                self::$runtimeCache[$cacheKey] = null;
-            }
-
-            return $object;
+            return $this->retrieve();
         }
 
         return null;
