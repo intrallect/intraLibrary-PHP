@@ -102,15 +102,14 @@ class Record
             foreach ($taxonGroups as $taxons) {
                 if ($requestingLevel) {
                     $numTaxons = count($taxons);
-                    if ($level <= 0 || $level > $numTaxons) {
-                        throw new IntraLibraryException("Invalid Classification Level: $level (max level: $numTaxons)");
+
+                    if ($level > 0 && $level <= $numTaxons) {
+                        $refIds = array_keys($taxons);
+                        $refId = $refIds[$numTaxons - $level];
+                        $taxon = $taxons[$refId];
+
+                        $classifications[$lomSource][$refId] = $taxon;
                     }
-
-                    $refIds = array_keys($taxons);
-                    $refId = $refIds[$numTaxons - $level];
-                    $taxon = $taxons[$refId];
-
-                    $classifications[$lomSource][$refId] = $taxon;
                 } else {
                     $classifications[$lomSource][] = $taxons;
                 }
