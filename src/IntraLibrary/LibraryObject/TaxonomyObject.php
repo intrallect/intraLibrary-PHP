@@ -25,6 +25,7 @@ class TaxonomyObject
     private $parentId 	= null;
     private $parentType = null;
     private $childIds 	= array();
+    private $usefors		= null;
 
     /**
      * Create an IntraLibrary Taxonomy Object
@@ -39,6 +40,7 @@ class TaxonomyObject
         $this->identifier	= $data['id'];
         $this->name 		= $data['name'];
         $this->description 	= $data['description'];
+        $this->usefors 		= $data['usefors'];
 
         switch ($type) {
             case self::TAXON:
@@ -173,6 +175,10 @@ class TaxonomyObject
     public function getChildIds()
     {
         return $this->childIds;
+    }
+    public function getUseFors()
+    {
+        return $this->usefors;
     }
 }
 
