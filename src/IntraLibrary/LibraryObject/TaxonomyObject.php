@@ -40,7 +40,7 @@ class TaxonomyObject
         $this->identifier	= $data['id'];
         $this->name 		= $data['name'];
         $this->description 	= $data['description'];
-        $this->usefors 		= $data['usefors'];
+        $this->usefors 		= isset($data['usefors']) ? $data['usefors'] : NULL;
 
         switch ($type) {
             case self::TAXON:
