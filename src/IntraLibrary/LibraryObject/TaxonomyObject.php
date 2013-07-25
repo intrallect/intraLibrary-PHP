@@ -176,6 +176,12 @@ class TaxonomyObject
     {
         return $this->childIds;
     }
+
+    /**
+     * Get the information from Usefors metadata field
+     *
+     * @return array an array of child IDs
+     */
     public function getUseFors()
     {
         return $this->usefors;
