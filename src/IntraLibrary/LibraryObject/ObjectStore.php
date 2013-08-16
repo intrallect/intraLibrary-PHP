@@ -21,10 +21,13 @@ class ObjectStore
 
     /**
      * Create an IntraLibrary Object Store
+     *
+     * @param string $username the intralibrary user that should access.
+     *                         if null, will use the username set in the Configuration
      */
-    public function __construct()
+    public function __construct($username = null)
     {
-        $this->username = Configuration::get('username');
+        $this->username = $username ? $username : Configuration::get('username');
     }
 
     /**
@@ -74,7 +77,8 @@ class ObjectStore
         );
 
         $xsResp = new SRWResponse('lom');
-        $xsReq 	= new XSearchRequest($xsResp);
+        $xsReq = new XSearchRequest($xsResp);
+        $xsReq->setXSearchUsername($this->username);
 
         // generate query conditions
         $conditions	= array();
