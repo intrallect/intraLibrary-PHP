@@ -22,7 +22,7 @@ abstract class Proxy
 {
     private static $actions = array();
     private static $callbacks = array();
-    private static $missingCallbackException = true;
+    private static $missingCallbackException = false;
 
     /**
     * Register a proxy function

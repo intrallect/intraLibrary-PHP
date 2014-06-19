@@ -6,6 +6,10 @@
 - composer added
 - all classes under 'IntraLibrary' namespace
 
+### Examples:
+
+See the `examples/` directory
+
 ### TODO:
 
 - rewrite a sword client, or move the swordapp-php-library into a composer.json dependency
