@@ -323,6 +323,7 @@ class Request
         curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curlHandle, CURLOPT_HEADER, false);
         curl_setopt($curlHandle, CURLINFO_HEADER_OUT, true);
+        curl_setopt($curlHandle, CURLOPT_CONNECTTIMEOUT_MS, Configuration::get('timeout') ?: 5000);
         curl_setopt(
             $curlHandle,
             CURLOPT_HEADERFUNCTION,
