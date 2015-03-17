@@ -1,7 +1,6 @@
 {
 	"name": "intrallect/intralibrary",
 	"description": "intraLibrary PHP client library",
-	"version": "2.1-dev",
 	"require": {
 		"php": ">=5.3"
 	},
@@ -9,5 +8,6 @@
 		"psr-0": {
 			"IntraLibrary": "src/"
 		}
-	}
+	},
+	"license": "GPL-3.0"
 }
