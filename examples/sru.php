@@ -2,30 +2,10 @@
 
 use IntraLibrary\Service\SRURequest;
 use IntraLibrary\Service\SRWResponse;
-use IntraLibrary\Loader;
-use IntraLibrary\Configuration;
-use IntraLibrary\Debug;
 
-// initialise the class loader
-require_once __DIR__ . '/../src/IntraLibrary/Loader.php';
-Loader::register(__DIR__ . '/../src');
+require 'init.php';
 
-// configure the client with intraLibrary's url
-Configuration::set(
-    array(
-        'hostname' => 'http://demonstrator.intralibrary.com'
-    )
-);
-
-// Optional:
-// register a logging function, which will be called after network requests
-// and various other events
-Debug::register(
-    "log",
-    function ($message) {
-        // print_r($message);
-    }
-);
+IntraLibrary\Configuration::set('hostname', 'http://demonstrator.intralibrary.com');
 
 // make a request and search for 'Test'
 $resp = new SRWResponse();

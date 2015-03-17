@@ -1,0 +1,71 @@
+<?php
+/*
+ * Modified from https://github.com/stuartlewis/swordapp-php-library/ (no longer exists)
+ */
+namespace IntraLibrary\SWORD;
+
+class Workspace
+{
+    // The title of the workspace
+    public $sac_workspacetitle;
+
+    // Collections in the workspace
+    public $sac_collections;
+
+    // Construct a new workspace by passing in a title
+    public function __construct($sac_newworkspacetitle)
+    {
+        // Store the title
+        $this->sac_workspacetitle = $sac_newworkspacetitle;
+    }
+
+    // Build the collection hierarchy
+    public function buildhierarchy($sac_colls, $sac_ns)
+    {
+        // Build the collections
+        foreach ($sac_colls as $sac_collection) {
+            // Create the new collection object
+            $sac_newcollection = new Collection(cleanString($sac_collection->children($sac_ns['atom'])->title));
+
+            // The location of the service document
+            // var_dump($sac_colls);
+            $href = $sac_collection->xpath("@href");
+            $sac_newcollection->sac_href = $href[0]['href'];
+
+            // An array of the accepted deposit types
+            foreach ($sac_collection->accept as $sac_accept) {
+                $sac_newcollection->sac_accept[] = $sac_accept;
+            }
+
+            // An array of the accepted packages
+            foreach ($sac_collection->xpath("sword:acceptPackaging") as $sac_acceptpackaging) {
+                $sac_newcollection->addAcceptPackaging($sac_acceptpackaging[0]);
+            }
+
+            // Add the collection policy
+            $sac_newcollection->sac_collpolicy = cleanString(
+                $sac_collection->children($sac_ns['sword'])->collectionPolicy
+            );
+
+            // Add the collection abstract
+            // Check if dcterms is in the known namspaces. If not, might not be an abstract
+            if (array_key_exists('dcterms', $sac_ns)) {
+                $sac_newcollection->sac_abstract = cleanString($sac_collection->children($sac_ns['dcterms'])->abstract);
+            }
+
+            // Find out if mediation is allowed
+            if ($sac_collection->children($sac_ns['sword'])->mediation == 'true') {
+                $sac_newcollection->sac_mediation = true;
+            } else {
+                $sac_newcollection->sac_mediation = false;
+            }
+
+            // Add a nested service document if there is one
+            $sac_newcollection->sac_service = cleanString($sac_collection->children($sac_ns['sword'])->service);
+
+            // Add to the collections in this workspace
+            $this->sac_collections[] = $sac_newcollection;
+        }
+    }
+}
+

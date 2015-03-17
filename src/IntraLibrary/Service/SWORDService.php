@@ -2,7 +2,7 @@
 
 namespace IntraLibrary\Service;
 
-use \SWORDAPPClient;
+use \IntraLibrary\SWORD\SWORDClient;
 use \IntraLibrary\Loader;
 use \IntraLibrary\Debug;
 use \IntraLibrary\Configuration;
@@ -16,7 +16,7 @@ use \IntraLibrary\Configuration;
 class SWORDService
 {
     /**
-     * @var SWORDAPPClient
+     * @var \IntraLibrary\SWORD\SWORDClient
      */
     private $client;
 
@@ -28,8 +28,7 @@ class SWORDService
      */
     public function __construct($username, $password)
     {
-        Loader::loadSWORDAPP_PHP_CLIENT();
-        $this->client = new SWORDAPPClient();
+        $this->client = new SWORDClient();
         $this->username = $username;
         $this->password = $password;
     }
@@ -41,11 +40,11 @@ class SWORDService
      */
     public function getDepositDetails()
     {
-        $url 		= Configuration::get('hostname') . '/IntraLibrary-Deposit/service';
+        $url = Configuration::get('hostname') . '/IntraLibrary-Deposit/service';
         Debug::log("SWORD requesting deposit details from $url");
-        $service 	= $this->client->servicedocument($url, $this->username, $this->password, '');
+        $service = $this->client->servicedocument($url, $this->username, $this->password, '');
 
-        $deposits 	= array();
+        $deposits = array();
 
         foreach ($service->sac_workspaces as $workspace) {
             $workspace_title = (string) $workspace->sac_workspacetitle;
