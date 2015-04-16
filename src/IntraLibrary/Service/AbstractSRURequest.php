@@ -73,6 +73,10 @@ abstract class AbstractSRURequest extends Request
             $requestParams['showUnpublished'] = 'true';
         }
 
+        if (!empty($params['order'])) {
+            $requestParams['x-order'] = (string) $params['order'];
+        }
+
         $requestParams = $this->updateRequestParams($requestParams);
 
         return $this->get('', $requestParams);
