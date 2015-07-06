@@ -43,6 +43,7 @@ class SRWLOMParser extends SRWParser
             'catalog'	  => './/lom:general/lom:identifier/lom:catalog',
             'title'       => './/lom:general/lom:title/lom:string',
             'description' => './/lom:general/lom:description/lom:string',
+            'keyword'     => './/lom:general/lom:keyword/lom:string',
             'format'      => './/lom:technical/lom:format',
             'size'        => './/lom:technical/lom:size',
             'technical_location' => './/lom:technical/lom:location',

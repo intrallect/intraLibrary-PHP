@@ -122,12 +122,12 @@ class ObjectStore
      *
      * @return array
      */
-    public function getGroups()
+    public function getGroups($useCache = true)
     {
         $key = 'groups';
 
         $cached = Cache::load($key);
-        if ($cached !== false) {
+        if ($cached !== false && $useCache) {
             return $cached;
         }
 
@@ -146,6 +146,27 @@ class ObjectStore
         Cache::save($key, $groups);
 
         return $groups;
+    }
+
+    /**
+     * Create a new group
+     *
+     * @param string $name
+     * @param string $description
+     * @return array
+     */
+    public function createGroup($name, $description)
+    {
+        $req = new RESTRequest();
+        $data = $req->adminGet('Group/create', array('group_name' => $name, 'group_description' => $description))->getData();
+        return $data;
+    }
+
+    public function deleteResource($resourceId)
+    {
+        $req = new RESTRequest();
+        $data = $req->adminGet('LearningObject/delete/' . $resourceId)->getData();
+        return $data;
     }
 }
 

@@ -18,6 +18,29 @@ class CollectionData
 {
 
     /**
+     * Create a new collection
+     *
+     * @param string $name
+     * @param string $description
+     * @param string $identifier
+     * @param array $permissions array of the following permissions: find, preview, contribute, export, annotate
+     * @param string $externallySearchable
+     * @return array
+     */
+    public function createCollection($name, $description, $identifier, $permissions = array('find', 'contribute'), $externallySearchable = true)
+    {
+        $req = new RESTRequest();
+        $data = $req->adminGet('Collection/create', array(
+                'collection_name' => $name,
+                'collection_description' => $description,
+                'collection_identifier' => $identifier,
+                'collection_permissions' => join(',', $permissions),
+                'collection_externally_searchable' => $externallySearchable
+        ))->getData();
+        return $data;
+    }
+
+    /**
      * Get collection id, name associative array
      *
      * @param boolean $usingAdmin if true, will use the admin account to retrive taxonomies
@@ -57,6 +80,27 @@ class CollectionData
         Cache::save($key, $collections);
 
         return $collections;
+    }
+
+    /**
+     *  Set (or remove) a collection permission override for a group
+     *
+     * @param string $collectionIdentifier
+     * @param int $groupId
+     * @param array $permissions array of the following permissions: find, preview, contribute, export, annotate
+     * @param string $removeGroupOverride
+     * @return array
+     */
+    public function overrideGroupPermissions($collectionIdentifier, $groupId, $permissions = array('find', 'contribute'), $removeGroupOverride = false)
+    {
+        $req = new RESTRequest();
+        $data = $req->adminGet('Collection/overrideGroupPermissions', array(
+                'collection_identifier' => $collectionIdentifier,
+                'group_id' => $groupId,
+                'collection_permissions' => join(',', $permissions),
+                'collection_remove_group_override=false' => $removeGroupOverride
+        ))->getData();
+        return $data;
     }
 }
 
