@@ -91,7 +91,7 @@ class CollectionData
      * @param string $removeGroupOverride
      * @return array
      */
-    public function overrideGroupPermissions($collectionIdentifier, $groupId, $permissions = array('find', 'contribute'), $removeGroupOverride = false)
+    public function overrideGroupPermissions($collectionIdentifier, $groupId, $permissions = array(), $removeGroupOverride = false)
     {
         $req = new RESTRequest();
         $data = $req->adminGet('Collection/overrideGroupPermissions', array(
