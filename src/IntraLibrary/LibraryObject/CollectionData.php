@@ -27,16 +27,24 @@ class CollectionData
      * @param string $externallySearchable
      * @return array
      */
-    public function createCollection($name, $description, $identifier, $permissions = array('find', 'contribute'), $externallySearchable = true)
-    {
+    public function createCollection(
+        $name,
+        $description,
+        $identifier,
+        $permissions = array('find', 'contribute'),
+        $externallySearchable = true
+    ) {
         $req = new RESTRequest();
-        $data = $req->adminGet('Collection/create', array(
+        $data = $req->adminGet(
+            'Collection/create',
+            array(
                 'collection_name' => $name,
                 'collection_description' => $description,
                 'collection_identifier' => $identifier,
                 'collection_permissions' => join(',', $permissions),
                 'collection_externally_searchable' => $externallySearchable
-        ))->getData();
+            )
+        )->getData();
         return $data;
     }
 
@@ -91,15 +99,22 @@ class CollectionData
      * @param string $removeGroupOverride
      * @return array
      */
-    public function overrideGroupPermissions($collectionIdentifier, $groupId, $permissions = array(), $removeGroupOverride = false)
-    {
+    public function overrideGroupPermissions(
+        $collectionIdentifier,
+        $groupId,
+        $permissions = array(),
+        $removeGroupOverride = false
+    ) {
         $req = new RESTRequest();
-        $data = $req->adminGet('Collection/overrideGroupPermissions', array(
+        $data = $req->adminGet(
+            'Collection/overrideGroupPermissions',
+            array(
                 'collection_identifier' => $collectionIdentifier,
                 'group_id' => $groupId,
                 'collection_permissions' => join(',', $permissions),
                 'collection_remove_group_override' => $removeGroupOverride
-        ))->getData();
+            )
+        )->getData();
         return $data;
     }
 }

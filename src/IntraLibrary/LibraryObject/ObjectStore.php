@@ -156,9 +156,7 @@ class ObjectStore
     public function getGroupsForUser($username)
     {
         $req  = new RESTRequest();
-        $data = $req->adminGet('Group', array(
-                'username' => $username
-        ))->getData();
+        $data = $req->adminGet('Group', array('username' => $username))->getData();
         $groups = array();
 
         // if there's only one group, need to wrap it in an array
@@ -177,11 +175,14 @@ class ObjectStore
 
     public function setGroupsForUser($username, $groups)
     {
-        $req  = new RESTRequest();
-        $data = $req->adminGet('User/setGroups', array(
+        $req = new RESTRequest();
+        $req->adminGet(
+            'User/setGroups',
+            array(
                 'username' => $username,
                 'selected_group_ids' => $groups
-        ))->getData();
+            )
+        );
     }
     /**
      * Create a new group
@@ -193,7 +194,10 @@ class ObjectStore
     public function createGroup($name, $description)
     {
         $req = new RESTRequest();
-        $data = $req->adminGet('Group/create', array('group_name' => $name, 'group_description' => $description))->getData();
+        $data = $req->adminGet(
+            'Group/create',
+            array('group_name' => $name, 'group_description' => $description)
+        )->getData();
         return $data;
     }
 
