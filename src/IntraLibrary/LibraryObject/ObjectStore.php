@@ -149,6 +149,41 @@ class ObjectStore
     }
 
     /**
+     * Get the user groups based on a specified username
+     *
+     * @return array
+     */
+    public function getGroupsForUser($username)
+    {
+        $req  = new RESTRequest();
+        $data = $req->adminGet('Group', array(
+                'username' => $username
+        ))->getData();
+        $groups = array();
+
+        // if there's only one group, need to wrap it in an array
+        if (isset($data['list']['group']['id'])) {
+            $data['list']['group'] = array($data['list']['group']);
+        }
+
+        if (isset($data['list']['group'])) {
+            foreach ($data['list']['group'] as $group) {
+                $groups[$group['id']] = $group;
+            }
+        }
+
+        return $groups;
+    }
+
+    public function setGroupsForUser($username, $groups)
+    {
+        $req  = new RESTRequest();
+        $data = $req->adminGet('User/setGroups', array(
+                'username' => $username,
+                'selected_group_ids' => $groups
+        ))->getData();
+    }
+    /**
      * Create a new group
      *
      * @param string $name
