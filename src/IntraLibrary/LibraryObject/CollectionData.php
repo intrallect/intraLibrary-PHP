@@ -98,7 +98,7 @@ class CollectionData
                 'collection_identifier' => $collectionIdentifier,
                 'group_id' => $groupId,
                 'collection_permissions' => join(',', $permissions),
-                'collection_remove_group_override=false' => $removeGroupOverride
+                'collection_remove_group_override' => $removeGroupOverride
         ))->getData();
         return $data;
     }
