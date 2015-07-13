@@ -117,6 +117,17 @@ class ObjectStore
         return isset($data[0]) ? $data[0] : null;
     }
 
+    public function addCollectionToObject($resourceId, $collectionIdentifier)
+    {
+        $req = new RESTRequest();
+        $data = $req->adminGet('LearningObject/addToCollection/' . $resourceId,
+                array(
+                    'collection_identifier' => $collectionIdentifier
+                )
+        )->getData();
+        return $data;
+    }
+
     /**
      * Get the user groups
      *
