@@ -11,6 +11,16 @@ namespace IntraLibrary\Service;
  */
 class RESTFileResponse extends RESTResponse
 {
+    private $loadResponse;
+
+    /**
+     * @param boolean $loadResponse whether or not to load the response via RESTResponse
+     */
+    public function __construct($loadResponse = true)
+    {
+        $this->loadResponse = $loadResponse;
+    }
+
     /**
      * Load the response data
      *
@@ -21,7 +31,7 @@ class RESTFileResponse extends RESTResponse
     {
         // successful file download responses via CURL
         // will return true
-        if ($responseData !== true) {
+        if ($responseData !== true && $this->loadResponse) {
             parent::load($responseData);
         }
     }

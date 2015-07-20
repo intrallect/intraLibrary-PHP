@@ -84,6 +84,7 @@ class Request
     private $responseData;
     private $responseCode;
     private $responseType;
+    private $responseHeaders;
 
     /**
      * Construct an IntraLibrary request object
@@ -148,8 +149,8 @@ class Request
         if ($curlHandle === null) {
             $curlHandle = curl_init();
         }
-        $responseHeaders = array();
-        $this->configureCurlHandle($curlHandle, $responseHeaders);
+        $this->responseHeaders = array();
+        $this->configureCurlHandle($curlHandle);
 
         // execute the curl handle
         if ($this->curlHandler) {
@@ -172,7 +173,7 @@ class Request
         } else {
             // otherwise log this request
             Debug::log("Request Headers:\n" . curl_getinfo($curlHandle, CURLINFO_HEADER_OUT));
-            Debug::log("Response Headers:\n" . implode("", $responseHeaders));
+            Debug::log("Response Headers:\n" . implode("", $this->responseHeaders));
         }
 
         curl_close($curlHandle);
@@ -309,15 +310,22 @@ class Request
         return $this->responseData;
     }
 
-
+    /**
+     * Get the headers of the last request
+     *
+     * @return array
+     */
+    public function getLastResponseHeaders()
+    {
+        return $this->responseHeaders;
+    }
 
     /**
      * Configure a curl handle
      *
      * @param resource $curlHandle      the curl handle
-     * @param array    $responseHeaders the response headers
      */
-    private function configureCurlHandle($curlHandle, &$responseHeaders)
+    private function configureCurlHandle($curlHandle)
     {
         curl_setopt($curlHandle, CURLOPT_URL, $this->requestURL);
         curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
@@ -328,8 +336,8 @@ class Request
             $curlHandle,
             CURLOPT_HEADERFUNCTION,
             // @codingStandardsIgnoreStart
-            function ($curlHandle, $header) use (&$responseHeaders) {
-                $responseHeaders[] = $header;
+            function ($curlHandle, $header) {
+                $this->responseHeaders[] = $header;
                 return strlen($header);
             }
             // @codingStandardsIgnoreEnd
