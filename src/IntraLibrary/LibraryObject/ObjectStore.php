@@ -120,10 +120,11 @@ class ObjectStore
     public function addCollectionToObject($resourceId, $collectionIdentifier)
     {
         $req = new RESTRequest();
-        $data = $req->adminGet('LearningObject/addToCollection/' . $resourceId,
-                array(
-                    'collection_identifier' => $collectionIdentifier
-                )
+        $data = $req->adminGet(
+            'LearningObject/addToCollection/' . $resourceId,
+            array(
+                'collection_identifier' => $collectionIdentifier
+            )
         )->getData();
         return $data;
     }
