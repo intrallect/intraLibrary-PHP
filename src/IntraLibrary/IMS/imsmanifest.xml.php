@@ -37,6 +37,7 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
 <?php endforeach; ?>
 <?php endif; ?>
             </lom:general>
+<?php if (isset($FullName) || isset($Organisation) || isset($Email)) : ?>
             <lom:lifeCycle>
                 <lom:contribute>
                     <lom:role>
@@ -44,9 +45,9 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
                         <lom:value>content provider</lom:value>
                     </lom:role>
                     <lom:entity>BEGIN:vcard&#xD;
-                        FN:<?php echo $FullName; ?>&#xD;
-                        ORG:<?php echo $Organisation; ?>&#xD;
-                        EMAIL:<?php echo $Email; ?>&#xD;
+                        <?php if (isset($FullName)) : ?>FN:<?php echo $FullName; ?>&#xD;<?php endif; ?>
+                        <?php if (isset($Organisation)) : ?>ORG:<?php echo $Organisation; ?>&#xD;<?php endif; ?>
+                        <?php if (isset($Email)) : ?>EMAIL:<?php echo $Email; ?>&#xD;<?php endif; ?>
                         END:vcard
                     </lom:entity>
                     <lom:date>
@@ -61,9 +62,9 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
                         <lom:value>creator</lom:value>
                     </lom:role>
                     <lom:entity>BEGIN:vcard&#xD;
-                        FN:<?php echo $FullName; ?>&#xD;
-                        ORG:<?php echo $Organisation; ?>&#xD;
-                        EMAIL:<?php echo $Email; ?>&#xD;
+                        <?php if (isset($FullName)) : ?>FN:<?php echo $FullName; ?>&#xD;<?php endif; ?>
+                        <?php if (isset($Organisation)) : ?>ORG:<?php echo $Organisation; ?>&#xD;<?php endif; ?>
+                        <?php if (isset($Email)) : ?>EMAIL:<?php echo $Email; ?>&#xD;<?php endif; ?>
                         END:vcard
                     </lom:entity>
                     <lom:date>
@@ -73,8 +74,11 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
                 <lom:metadataSchema>IEEE LOM 1.0</lom:metadataSchema>
                 <lom:language>en</lom:language>
             </lom:metaMetadata>
+<?php endif; ?>
             <lom:technical>
+<?php if (isset($TechnicalFormat)) : ?>
                 <lom:format><?php echo $TechnicalFormat; ?></lom:format>
+<?php endif; ?>
 <?php if (isset($TechnicalSize)) : ?>
                 <lom:size><?php echo $TechnicalSize; ?></lom:size>
 <?php endif; ?>
@@ -126,9 +130,9 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
     </metadata>
     <organizations default="ORG_1">
         <organization identifier="ORG_1">
-            <title><?php echo $Title ?></title>
+            <title>default organization</title>
             <item identifierref="<?php echo $MainIdentifier ?>" identifier="ITEM_1">
-                <title><?php echo $Title ?></title>
+                <title><?php echo isset($FileName) ? $FileName : $Title; ?></title>
             </item>
         </organization>
     </organizations>
