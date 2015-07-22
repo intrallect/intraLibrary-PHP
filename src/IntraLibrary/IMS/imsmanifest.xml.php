@@ -86,6 +86,14 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
                 <lom:location><?php echo $TechnicalLocation; ?></lom:location>
 <?php endif; ?>
             </lom:technical>
+<?php if (isset($EducationalDescription)) : ?>
+            <lom:educational>
+                <!-- Educational Section -->
+                <lom:description>
+                    <lom:string language="en"><?php echo $EducationalDescription; ?></lom:string>
+                </lom:description>
+            </lom:educational>
+<?php endif; ?>
 <?php if (isset($Copyright)) : ?>
             <lom:rights>
                 <lom:copyrightAndOtherRestrictions>
