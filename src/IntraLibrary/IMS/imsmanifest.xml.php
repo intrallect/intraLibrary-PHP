@@ -97,10 +97,10 @@ echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
                 </lom:description>
             </lom:rights>
 <?php endif; ?>
-<?php if (isset($ResourceType)) : ?>
+<?php if (isset($ResourceType, $ResourceTypeSource)) : ?>
             <lom:educational>
                 <lom:learningResourceType>
-                    <lom:source>LOMv1.0</lom:source>
+                    <lom:source><?php echo $ResourceTypeSource; ?></lom:source>
                     <lom:value><?php echo $ResourceType; ?></lom:value>
                 </lom:learningResourceType>
             </lom:educational>
