@@ -213,10 +213,36 @@ class ObjectStore
         return $data;
     }
 
+    /**
+     * Remove resource from IntraLibrary
+     *
+     * @param int $resourceId
+     * @return array
+     */
     public function deleteResource($resourceId)
     {
         $req = new RESTRequest();
         $data = $req->adminGet('LearningObject/delete/' . $resourceId)->getData();
+        return $data;
+    }
+
+    /**
+     * Move the resource within its workflow.
+     *
+     * @param int $resourceId
+     * @param int $groupid
+     * @param int $workflowstage
+     * @return array
+     */
+    public function moveResource($resourceId, $groupid, $workflowstage)
+    {
+        $req = new RESTRequest();
+        $data = $req->adminGet(
+                'Workflow/moveResources',
+                array('learning_objects' => $resourceId, 'group_id' => $groupid,
+                        'workflow_stage' => $workflowstage
+                )
+        )->getData();
         return $data;
     }
 }
