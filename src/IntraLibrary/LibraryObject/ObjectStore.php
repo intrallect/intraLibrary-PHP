@@ -238,10 +238,12 @@ class ObjectStore
     {
         $req = new RESTRequest();
         $data = $req->adminGet(
-                'Workflow/moveResources',
-                array('learning_objects' => $resourceId, 'group_id' => $groupid,
-                        'workflow_stage' => $workflowstage
-                )
+            'Workflow/moveResources',
+            array(
+                'learning_objects' => $resourceId,
+                'group_id' => $groupid,
+                'workflow_stage' => $workflowstage
+            )
         )->getData();
         return $data;
     }
