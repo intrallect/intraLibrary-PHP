@@ -55,7 +55,7 @@ class CollectionData
      * @param boolean $useCache   if true will attempt to use cached taxonomies
      * @return array
      */
-    public function getAvailableCollections($usingAdmin = false, $useCache = true)
+    public function getAvailableCollections($usingAdmin = false, $useCache = true, $details = false)
     {
         $key = $usingAdmin ? 'collection//admin' : 'collection//user:' . Configuration::get('username');
 
@@ -82,7 +82,7 @@ class CollectionData
         }
 
         foreach ($data as $col) {
-            $collections[ $col["_attributes"]["id"] ] = $col["_attributes"]["name"];
+            $collections[ $col["_attributes"]["id"] ] = $details ? $col["_attributes"] : $col["_attributes"]["name"];
         }
 
         Cache::save($key, $collections);
