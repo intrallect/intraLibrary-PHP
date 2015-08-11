@@ -38,5 +38,18 @@ class Cache extends Proxy
     {
         return parent::invoke(__FUNCTION__, func_get_args());
     }
+
+    /**
+     * Delete from the cache
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @param string $key the key to delete
+     * @return mixed
+     */
+    public static function delete($key)
+    {
+        return parent::invoke(__FUNCTION__, func_get_args());
+    }
 }
 
