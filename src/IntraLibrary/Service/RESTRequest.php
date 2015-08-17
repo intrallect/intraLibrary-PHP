@@ -96,10 +96,10 @@ class RESTRequest extends Request
      * @param string $responseData the data returned from the request
      * @return RESTResponse
      */
-    protected function prepareResponse($responseData)
+    protected function prepareResponse($responseData, $curlError)
     {
         try {
-            $this->responseObject->load($responseData);
+            $this->responseObject->load($responseData, $curlError);
         } catch (Exception $ex) {
             error_log('Failed to load REST response from ' . $this->getLastRequestInfo());
             error_log('Exception: ' . $ex->getMessage());

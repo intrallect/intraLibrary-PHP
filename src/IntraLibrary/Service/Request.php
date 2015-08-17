@@ -174,6 +174,7 @@ class Request
             // otherwise log this request
             Debug::log("Request Headers:\n" . curl_getinfo($curlHandle, CURLINFO_HEADER_OUT));
             Debug::log("Response Headers:\n" . implode("", $this->responseHeaders));
+            $errorMsg = null;
         }
 
         curl_close($curlHandle);
@@ -186,7 +187,7 @@ class Request
             Debug::screen($message);
         }
 
-        return $this->prepareResponse($this->responseData);
+        return $this->prepareResponse($this->responseData, $errorMsg);
     }
 
     /**
@@ -242,9 +243,10 @@ class Request
      * Prepare the response. Subclasses should override this function
      *
      * @param string $responseData the response data
+     * @param mixed $curlError the curl error, if any
      * @return mixed
      */
-    protected function prepareResponse($responseData)
+    protected function prepareResponse($responseData, $curlError)
     {
         return $responseData;
     }

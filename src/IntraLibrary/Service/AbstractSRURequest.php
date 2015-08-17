@@ -90,23 +90,16 @@ abstract class AbstractSRURequest extends Request
      * @param string $responseData the response data
      * @return SRWResponse
      */
-    protected function prepareResponse($responseData)
+    protected function prepareResponse($responseData, $curlError)
     {
         $httpCode = $this->getLastResponseCode();
-        if ($httpCode < 200 || $httpCode > 399) {
+        if ($curlError) {
+            $this->responseObject->setInternalError($curlError);
+        } else if ($httpCode < 200 || $httpCode > 399) {
             // non-OK http codes for XSearch requests don't return a normal XML response
             $this->responseObject->setInternalError($responseData);
         } else {
             $this->responseObject->load($responseData);
-        }
-
-        $numRecords 	= count($this->responseObject->getRecords());
-        $totalRecords 	= $this->responseObject->getTotalRecords();
-
-        if ($numRecords != $totalRecords) {
-            $requestInfo = $this->getLastRequestInfo();
-            $messageFormat = "IntraLibrary-PHP: total records (%s) do not match response count (%s) for %s";
-            error_log(sprintf($messageFormat, $totalRecords, $numRecords, $requestInfo));
         }
 
         return $this->responseObject;

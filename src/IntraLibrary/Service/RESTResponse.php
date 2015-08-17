@@ -21,11 +21,16 @@ class RESTResponse
      * Load the response data
      *
      * @param string $responseData the response data
+     * @param mixed $curlError the curl error, if any
      * @return void
      */
-    public function load($responseData)
+    public function load($responseData, $curlError)
     {
         $this->error = $this->data = $this->unauthorised = null;
+
+        if ($curlError) {
+            throw new IntraLibraryException($curlError);
+        }
 
         $response = json_decode($responseData, true);
         if (isset($response['intralibrary-ws']['response'])) {
