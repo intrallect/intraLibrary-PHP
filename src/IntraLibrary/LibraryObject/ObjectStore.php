@@ -50,7 +50,7 @@ class ObjectStore
      * @param integer $limit  the maximum number of items to get
      * @return array<Object>
      */
-    public function getObjects(array $params, $limit = false)
+    public function getObjects(array $params, $limit = false, $useCache = true, $showUnpublished = false)
     {
         // Generate the cache key
         $key 		= "objects//user:$this->username";
@@ -64,7 +64,7 @@ class ObjectStore
         }
 
         // Try the cache
-        if (($cached = Cache::load($key)) !== false) {
+        if ($useCache && ($cached = Cache::load($key)) !== false) {
             return $cached;
         }
 
@@ -73,11 +73,13 @@ class ObjectStore
             'type' => 'lom.educational_learningResourceType',
             'taxon' => 'lom.classification_taxonpath_taxon_id',
             'source' => 'lom.classification_taxonpath_source',
-            'catalog' => 'lom.general_catalogentry_entry'
+            'catalog' => 'lom.general_catalogentry_entry',
+            'catalogName' => 'lom.general_catalogentry_catalog'
         );
 
         $xsResp = new SRWResponse('lom');
         $xsReq = new XSearchRequest($xsResp);
+        $xsReq->setShowUnpublished($showUnpublished);
         $xsReq->setXSearchUsername($this->username);
 
         // generate query conditions
@@ -125,6 +127,18 @@ class ObjectStore
             array(
                 'collection_identifier' => $collectionIdentifier
             )
+        )->getData();
+        return $data;
+    }
+
+    public function removeCollectionFromObject($resourceId, $collectionId)
+    {
+        $req = new RESTRequest();
+        $data = $req->adminGet(
+                'LearningObject/removeFromCollection/' . $resourceId,
+                array(
+                        'collection_id' => $collectionId
+                )
         )->getData();
         return $data;
     }

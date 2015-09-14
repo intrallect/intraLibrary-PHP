@@ -67,6 +67,10 @@ class Record
         return is_array($this->identifier) ? $this->identifier[0] : $this->identifier;
     }
 
+    public function getCatalog()
+    {
+        return $this->catalog;
+    }
 
     /**
      * Get data for this object
