@@ -60,7 +60,7 @@ class XSearchRequest extends AbstractSRURequest
         $requestParams['username'] = empty($this->xsearchUsername) ? $this->getUsername() : $this->xsearchUsername;
 
         if ($this->showUnpublished) {
-            $requestParams['showUnpublished'] = true;
+            $requestParams['showUnpublished'] = "true";
         }
 
         return $requestParams;
