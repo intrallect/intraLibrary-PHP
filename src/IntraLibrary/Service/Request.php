@@ -334,21 +334,25 @@ class Request
         curl_setopt($curlHandle, CURLOPT_HEADER, false);
         curl_setopt($curlHandle, CURLINFO_HEADER_OUT, true);
         curl_setopt($curlHandle, CURLOPT_CONNECTTIMEOUT_MS, Configuration::get('timeout') ?: 5000);
-        curl_setopt(
-            $curlHandle,
-            CURLOPT_HEADERFUNCTION,
-            // @codingStandardsIgnoreStart
-            function ($curlHandle, $header) {
-                $this->responseHeaders[] = $header;
-                return strlen($header);
-            }
-            // @codingStandardsIgnoreEnd
-        );
+        curl_setopt($curlHandle, CURLOPT_HEADERFUNCTION, array($this, 'storeCurlHeader'));
 
         if ($this->username && $this->password) {
             curl_setopt($curlHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
             curl_setopt($curlHandle, CURLOPT_USERPWD, "$this->username:$this->password");
         }
+    }
+
+    /**
+     * Store headers recieved in cURL request
+     *
+     * @param resource $curlHandle
+     * @param string $header
+     * @return int the processed header length
+     */
+    private function storeCurlHeader($curlHandle, $header)
+    {
+        $this->responseHeaders[] = $header;
+        return strlen($header);
     }
 }
 
