@@ -38,8 +38,11 @@ class Package
      */
     public function setFile($filepath)
     {
+        if (!file_exists($filepath)) {
+            throw new Exception("Unable to add $filepath to IMS Content Package: file does not exist.");
+        }
         if (!is_readable($filepath)) {
-            throw new Exception("Unable to add $filepath to IMS Content Package");
+            throw new Exception("Unable to add $filepath to IMS Content Package: file is not readable.");
         }
         $this->filepath = $filepath;
     }
