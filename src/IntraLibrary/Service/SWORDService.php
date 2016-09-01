@@ -3,7 +3,8 @@
 namespace IntraLibrary\Service;
 
 use \IntraLibrary\SWORD\SWORDClient;
-use \IntraLibrary\Loader;
+use \IntraLibrary\SWORD\SWORDEntry;
+use \IntraLibrary\SWORD\SWORDErrorDocument;
 use \IntraLibrary\Debug;
 use \IntraLibrary\Configuration;
 
@@ -15,6 +16,23 @@ use \IntraLibrary\Configuration;
  */
 class SWORDService
 {
+    /**
+     * Get the id from a deposit response
+     *
+     * @param \IntraLibrary\SWORD\SWORDEntry $response
+     * @return the id, or null if it was unavailable
+     */
+    public static function get_lo_id(SWORDEntry $response)
+    {
+        if ($response instanceof SWORDErrorDocument) {
+            return null;
+        }
+
+        preg_match('/^.*\:(\d+)$/', (string) $response->sac_id, $matches);
+
+        return isset($matches[1]) ? $matches[1] : null;
+    }
+
     /**
      * @var \IntraLibrary\SWORD\SWORDClient
      */
@@ -68,7 +86,7 @@ class SWORDService
      * @param string  $url       The deposit URL
      * @param string  $filename  The file to deposit
      * @param boolean $MD5_check Whether to perform an MD5 check
-     * @return void
+     * @return \IntraLibrary\SWORD\SWORDEntry
      */
     public function deposit($url, $filename, $MD5_check = false)
     {
