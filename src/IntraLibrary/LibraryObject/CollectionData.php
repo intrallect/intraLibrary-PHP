@@ -59,6 +59,10 @@ class CollectionData
     {
         $key = $usingAdmin ? 'collection//admin' : 'collection//user:' . Configuration::get('username');
 
+        if ($details) {
+            $key = 'detailed' . $key;
+        }
+
         if ($useCache) {
             // Check if it's cached..
             $collections = Cache::load($key);

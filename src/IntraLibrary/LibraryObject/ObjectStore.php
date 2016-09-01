@@ -70,6 +70,7 @@ class ObjectStore
 
         // Shortcuts to metadata params
         $paramMap = array(
+            'collectionIdentifier' => 'rec.collectionIdentifier',
             'type' => 'lom.educational_learningResourceType',
             'taxon' => 'lom.classification_taxonpath_taxon_id',
             'source' => 'lom.classification_taxonpath_source',
