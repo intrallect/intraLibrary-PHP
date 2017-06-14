@@ -27,7 +27,7 @@ class RESTFileResponse extends RESTResponse
      * @param mixed $responseData the response data
      * @return void
      */
-    public function load($responseData)
+    public function load($responseData, $curlError)
     {
         // successful file download responses via CURL
         // will return true
